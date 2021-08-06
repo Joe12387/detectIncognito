@@ -1,5 +1,9 @@
 /**
  *
+ * https://github.com/Joe12387/detectIncognito
+ *
+ * (c) 2021 Joe Rutkowski <Joe@dreggledotcom>
+ * 
  * Incognito & Private Browsing detection
  *
  * Support: Safari for iOS   -- 8 to 14
@@ -7,7 +11,7 @@
  *          Chrome/Chromium  <= 94 Dev
  *          Edge             <= 93 Dev
  *          Firefox          <= 91 Beta
- *          MSIE             <= 10
+ *          MSIE             >= 10
  *
  **/
 
