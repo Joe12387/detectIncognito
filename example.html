@@ -1,0 +1,18 @@
+<html>
+
+<head>
+  <title>Private Browsing Detection</title>
+</head>
+
+<body onload="detect()">
+  <script>
+    function detect() {
+      detectIncognito(function(isPrivate) {
+        alert("Browser is" + (isPrivate ? "\x20" : "\x20NOT\x20") + "in Incognito or Private Browsing mode");
+      });
+    }
+  </script>
+  <script src="detectIncognito.js"></script>
+</body>
+
+</html>
