@@ -83,10 +83,10 @@ var detectIncognito = function(callback) {
     iframe.style.display = "none";
     document.body.appendChild(iframe);
   
-    iframe.contentWindow.applicationCache.addEventListener("error", (function() {
+    iframe.contentWindow.applicationCache.addEventListener("error", function() {
       tripped = true;
       return returnResult(true);
-    }));
+    });
     
     setTimeout(function() {
       if (!tripped) returnResult(false);
@@ -111,7 +111,7 @@ var detectIncognito = function(callback) {
   
   function getQuotaLimit() {
     var w = window;
-    if (w.performance !== undefined && w.performance.memory !== undefined && w.performance.memory !== undefined && w.performance.memory.jsHeapSizeLimit !== undefined) {
+    if (w.performance !== undefined && w.performance.memory !== undefined && w.performance.memory.jsHeapSizeLimit !== undefined) {
       return performance.memory.jsHeapSizeLimit;
     }
     return 1073741824;
