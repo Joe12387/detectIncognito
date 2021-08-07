@@ -162,7 +162,7 @@ var detectIncognito = function(callback) {
    **/
   
   function MSIEPrivateTest() {
-    returnResult(!window.indexedDB && (window.PointerEvent || window.MSPointerEvent));
+    returnResult(!window.indexedDB);
   }
 
   function main() {
