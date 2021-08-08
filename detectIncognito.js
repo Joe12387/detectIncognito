@@ -8,8 +8,8 @@
  *
  * Support: Safari for iOS   -- 8 to 14
  *          Safari for macOS <= 14
- *          Chrome/Chromium  <= 94 Dev
- *          Edge             <= 93 Dev
+ *          Chrome/Chromium  -- 50 to 94 Dev
+ *          Edge             -- 79 to 93 Dev
  *          Firefox          <= 91 Beta
  *          MSIE             >= 10
  *
@@ -40,6 +40,19 @@ var detectIncognito = function(callback) {
   
   function isMSIE() {
     return !!navigator.msSaveBlob;
+  }
+  
+  function isBrave() {
+    if (!isChrome()) return false;
+    if (window.navigator.brave !== undefined) {
+      if (window.navigator.brave.isBrave.name === "isBrave") {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
   
   function returnResult(returnResult) {
@@ -142,11 +155,32 @@ var detectIncognito = function(callback) {
       quota: NaN
     });
   }
-
-  function chromePrivateTest() {
+  
+  // >= 76
+  function storageQuotaChromePrivateTest() {
     storageEstimateWrapper().then(function(response){
       returnResult(response.quota < getQuotaLimit());
     });
+  }
+  
+  // 50 to 75
+  function oldChromePrivateTest() {
+    var fs = window.webkitRequestFileSystem;
+    var success = function() {
+      returnResult(false);
+    };
+    var error = function() {
+      returnResult(true);
+    };
+    fs(0, 1, success, error);
+  }
+  
+  function chromePrivateTest() {
+    if (Promise.allSettled !== undefined) {
+      storageQuotaChromePrivateTest();
+    } else {
+      oldChromePrivateTest();
+    }
   }
   
   /**
@@ -161,19 +195,21 @@ var detectIncognito = function(callback) {
    * MSIE
    **/
   
-  function MSIEPrivateTest() {
+  function msiePrivateTest() {
     returnResult(!window.indexedDB);
   }
 
   function main() {
     if (isSafari()) {
       safariPrivateTest();
+    } else if (isBrave()) {
+      returnResult(false);
     } else if (isChrome()) {
       chromePrivateTest();
     } else if (isFirefox()) {
       firefoxPrivateTest();
     } else if (isMSIE()) {
-      MSIEPrivateTest();
+      msiePrivateTest();
     } else {
       throw "detectIncognito cannot determine the browser";
     }

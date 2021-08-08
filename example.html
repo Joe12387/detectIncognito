@@ -8,7 +8,7 @@
   <script>
     function detect() {
       detectIncognito(function(isPrivate) {
-        alert("Browser is" + (isPrivate ? "\x20" : "\x20NOT\x20") + "in Incognito or Private Browsing mode");
+        alert(isPrivate ? "Browser is in Incognito or Private Browsing mode" : "Browser is NOT in Incognito or Private Browsing mode");
       });
     }
   </script>
