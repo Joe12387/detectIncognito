@@ -21,14 +21,6 @@ var detectIncognito = function(callback) {
     return v && v.indexOf("Apple") === 0;
   }
 
-  function isSafari13OrHigher() {
-    return navigator.maxTouchPoints !== undefined;
-  }
-
-  function isMacOSSafari() {
-    return window.safari !== undefined && window.DeviceMotionEvent === undefined;
-  }
-
   function isChrome() {
     var v = navigator.vendor;
     return v && v.indexOf("Google") === 0;
@@ -73,23 +65,6 @@ var detectIncognito = function(callback) {
     return returnResult(false);
   }
 
-  function oldSafariTest() {
-    var openDB = window.openDatabase;
-    var storage = window.localStorage;
-    try {
-      openDB(null, null, null, null);
-    } catch (e) {
-      return returnResult(true);
-    }
-    try {
-      storage.setItem("test", "1");
-      storage.removeItem("test");
-      return returnResult(false);
-    } catch (e) {
-      return returnResult(true);
-    }
-  }
-  
   function iOS_safari14() {
     var tripped = false;
     var iframe = document.createElement("iframe");
@@ -105,10 +80,27 @@ var detectIncognito = function(callback) {
       if (!tripped) returnResult(false);
     }, 100);
   }
-  
+
+  function oldSafariTest() {
+    var openDB = window.openDatabase;
+    var storage = window.localStorage;
+    try {
+      openDB(null, null, null, null);
+    } catch (e) {
+      return returnResult(true);
+    }
+    try {
+      storage.setItem("test", "1");
+      storage.removeItem("test");
+    } catch (e) {
+      return returnResult(true);
+    }
+    return returnResult(false);
+  }
+    
   function safariPrivateTest() {
-    if (isSafari13OrHigher()) {
-      if (isMacOSSafari()) {
+    if (navigator.maxTouchPoints !== undefined) {
+      if (window.safari !== undefined && window.DeviceMotionEvent === undefined) {
         macOS_safari14();
       } else {
         iOS_safari14();
@@ -176,7 +168,7 @@ var detectIncognito = function(callback) {
   }
   
   function chromePrivateTest() {
-    if (Promise.allSettled !== undefined) {
+    if (Promise !== undefined && Promise.allSettled !== undefined) {
       storageQuotaChromePrivateTest();
     } else {
       oldChromePrivateTest();
