@@ -2,15 +2,15 @@
  *
  * https://github.com/Joe12387/detectIncognito
  *
- * (c) 2021 Joe Rutkowski <Joe@dreggledotcom>
+ * (c) 2021 Joe Rutkowski <Joe@dreggle.com>
  * 
  * Incognito & Private Browsing detection
  *
  * Support: Safari for iOS   -- 8 to 14
  *          Safari for macOS <= 14
  *          Chrome/Chromium  -- 50 to 94 Dev
- *          Edge             -- 79 to 93 Dev
- *          Firefox          <= 91 Beta
+ *          Edge             -- 15 - 18; 79 to 93 Dev
+ *          Firefox          -- 44 to 91 Beta
  *          MSIE             >= 10
  *
  **/
@@ -27,7 +27,7 @@ var detectIncognito = function(callback) {
   }
 
   function isFirefox() {
-    return document.documentElement !== undefined && document.documentElement.style.MozAppearance !== undefined;
+    return document.documentElement !== undefined && document.documentElement.style !== undefined && document.documentElement.style.MozAppearance !== undefined;
   }
   
   function isMSIE() {
@@ -47,22 +47,18 @@ var detectIncognito = function(callback) {
     }
   }
   
-  function returnResult(returnResult) {
-    callback(returnResult);
-  }
-  
   /**
    * Safari (Safari for iOS & macOS v8.0 - v14.1)
    **/
 
   function macOS_safari14() {
-    if (!window.safari) return returnResult(false);
+    if (!window.safari) return callback(false);
     try {
       window.safari.pushNotification.requestPermission('https://example.com', 'private', {}, (function() {}));
     } catch (e) {
-      return returnResult(!new RegExp("gesture").test(e));
+      return callback(!new RegExp("gesture").test(e));
     }
-    return returnResult(false);
+    return callback(false);
   }
 
   function iOS_safari14() {
@@ -73,11 +69,11 @@ var detectIncognito = function(callback) {
   
     iframe.contentWindow.applicationCache.addEventListener("error", function() {
       tripped = true;
-      return returnResult(true);
+      return callback(true);
     });
     
     setTimeout(function() {
-      if (!tripped) returnResult(false);
+      if (!tripped) callback(false);
     }, 100);
   }
 
@@ -87,15 +83,15 @@ var detectIncognito = function(callback) {
     try {
       openDB(null, null, null, null);
     } catch (e) {
-      return returnResult(true);
+      return callback(true);
     }
     try {
       storage.setItem("test", "1");
       storage.removeItem("test");
     } catch (e) {
-      return returnResult(true);
+      return callback(true);
     }
-    return returnResult(false);
+    return callback(false);
   }
     
   function safariPrivateTest() {
@@ -151,7 +147,7 @@ var detectIncognito = function(callback) {
   // >= 76
   function storageQuotaChromePrivateTest() {
     storageEstimateWrapper().then(function(response){
-      returnResult(response.quota < getQuotaLimit());
+      callback(response.quota < getQuotaLimit());
     });
   }
   
@@ -159,10 +155,10 @@ var detectIncognito = function(callback) {
   function oldChromePrivateTest() {
     var fs = window.webkitRequestFileSystem;
     var success = function() {
-      returnResult(false);
+      callback(false);
     };
     var error = function() {
-      returnResult(true);
+      callback(true);
     };
     fs(0, 1, success, error);
   }
@@ -180,7 +176,7 @@ var detectIncognito = function(callback) {
    **/
   
   function firefoxPrivateTest() {
-    returnResult(!navigator.serviceWorker);
+    callback(!navigator.serviceWorker);
   }
 
   /**
@@ -188,14 +184,14 @@ var detectIncognito = function(callback) {
    **/
   
   function msiePrivateTest() {
-    returnResult(!window.indexedDB);
+    callback(!window.indexedDB);
   }
 
   function main() {
     if (isSafari()) {
       safariPrivateTest();
     } else if (isBrave()) {
-      returnResult(false);
+      callback(false);
     } else if (isChrome()) {
       chromePrivateTest();
     } else if (isFirefox()) {
