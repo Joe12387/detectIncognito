@@ -1,5 +1,5 @@
 # detectIncognito.js
-This is a JS library to detect Incognito and other private browsing modes on Chrome, Edge, Safari, Firefox and MSIE.
+JS detection of Incognito & other private browsing modes on Chrome, Edge, Safari, Firefox and MSIE.
 
 # Supported
  * Safari for iOS - 8 to 14
