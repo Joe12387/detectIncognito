@@ -52,7 +52,6 @@ var detectIncognito = function(callback) {
    **/
 
   function macOS_safari14() {
-    if (!window.safari) return callback(false);
     try {
       window.safari.pushNotification.requestPermission('https://example.com', 'private', {}, (function() {}));
     } catch (e) {
