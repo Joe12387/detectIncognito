@@ -36,7 +36,7 @@ var detectIncognito = function(callback) {
 
   function isBrave() {
     if (!isChrome()) {
-        return false;
+      return false;
     }
 
     if (window.navigator.brave !== undefined) {
@@ -134,8 +134,8 @@ var detectIncognito = function(callback) {
         n.webkitTemporaryStorage.queryUsageAndQuota(
           function(usage, quota) {
             resolve({
-              "quota" : quota,
-              "usage" : usage
+              "quota": quota,
+              "usage": usage
             });
           },
           reject
@@ -151,7 +151,7 @@ var detectIncognito = function(callback) {
 
   // >= 76
   function storageQuotaChromePrivateTest() {
-    storageEstimateWrapper().then(function(response){
+    storageEstimateWrapper().then(function(response) {
       callback(response.quota < getQuotaLimit());
     });
   }
