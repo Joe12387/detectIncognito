@@ -18,12 +18,12 @@
 var detectIncognito = function(callback) {
   function isSafari() {
     var v = navigator.vendor;
-    return v && v.indexOf("Apple") === 0;
+    return v !== undefined && v.indexOf("Apple") === 0;
   }
 
   function isChrome() {
     var v = navigator.vendor;
-    return v && v.indexOf("Google") === 0;
+    return v !== undefined && v.indexOf("Google") === 0;
   }
 
   function isFirefox() {
@@ -31,7 +31,7 @@ var detectIncognito = function(callback) {
   }
 
   function isMSIE() {
-    return !!navigator.msSaveBlob;
+    return navigator.msSaveBlob !== undefined;
   }
 
   function isBrave() {
