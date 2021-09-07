@@ -8,6 +8,4 @@ JS detection of Incognito & other private browsing modes on Chrome, Edge, Safari
  * Edge - 15 to 18; 79 to 94 Dev
  * Firefox - 44 to 92 Beta
  * MSIE >= 10
-
-# Unsupported
  * Brave

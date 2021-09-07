@@ -177,6 +177,16 @@ var detectIncognito = function(callback) {
   }
 
   /**
+   * Brave
+   **/
+
+  function bravePrivateTest() {
+    storageEstimateWrapper().then(function(response) {
+      callback(response.usage === 0);
+    });
+  }
+
+  /**
    * Firefox
    **/
 
@@ -196,7 +206,7 @@ var detectIncognito = function(callback) {
     if (isSafari()) {
       safariPrivateTest();
     } else if (isBrave()) {
-      callback(false);
+      bravePrivateTest();
     } else if (isChrome()) {
       chromePrivateTest();
     } else if (isFirefox()) {
