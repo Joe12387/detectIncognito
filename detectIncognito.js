@@ -7,7 +7,7 @@
  * Incognito & Private Browsing detection
  *
  * Support: Safari for iOS   -- 8 to 15
- *          Safari for macOS <= 14
+ *          Safari for macOS <= 15
  *          Chrome/Chromium  -- 50 to 95 Dev
  *          Edge             -- 15 - 18; 79 to 95 Dev
  *          Firefox          -- 44 to 93 Beta
