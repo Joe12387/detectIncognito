@@ -181,8 +181,11 @@ var detectIncognito = function(callback) {
    **/
 
   function bravePrivateTest() {
+    var request = indexedDB.open("test", 2);
+
     storageEstimateWrapper().then(function(response) {
-      callback(response.usage === 0);
+      console.log(response.usage);
+      callback(response.usage === 261);
     });
   }
 
