@@ -1,6 +1,8 @@
 # detectIncognito.js
 JS detection of Incognito & other private browsing modes on Chrome, Edge, Safari, Firefox, Brave and MSIE.
 
+DEMO: https://detectincognito.com/
+
 # Supported Browsers
  * Safari for iOS - 8 to 15
  * Safari for macOS <= 15
