@@ -27,7 +27,7 @@ var detectIncognito = function(callback) {
   }
 
   function isFirefox() {
-    return document.documentElement !== undefined && document.documentElement.style !== undefined && document.documentElement.style.MozAppearance !== undefined;
+    return document.documentElement !== undefined && document.documentElement.style.MozAppearance !== undefined;
   }
 
   function isMSIE() {
@@ -51,7 +51,7 @@ var detectIncognito = function(callback) {
   }
 
   /**
-   * Safari (Safari for iOS & macOS v8.0 - v14.1)
+   * Safari (Safari for iOS & macOS v8.0 - v15.0)
    **/
 
   function macOS_safari14() {
@@ -185,7 +185,7 @@ var detectIncognito = function(callback) {
 
     storageEstimateWrapper().then(function(response) {
       console.log(response.usage);
-      callback(response.usage === 261);
+      callback(response.usage === 110 || response.usage === 261);
     });
   }
 
@@ -194,7 +194,7 @@ var detectIncognito = function(callback) {
    **/
 
   function firefoxPrivateTest() {
-    callback(!navigator.serviceWorker);
+    callback(navigator.serviceWorker === undefined);
   }
 
   /**
@@ -202,7 +202,7 @@ var detectIncognito = function(callback) {
    **/
 
   function msiePrivateTest() {
-    callback(!window.indexedDB);
+    callback(window.indexedDB === undefined);
   }
 
   function main() {
