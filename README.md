@@ -19,3 +19,4 @@ If you are aware of any modern browsers this script does not work with, please l
 # Notes
  * This script does not detect Container Tabs on Firefox as they work differently compared to private mode.
  * An error will be thrown if the browser cannot be identified.
+ * Brave support is tentative and is untested on sites that use indexedDB or other storage APIs.
