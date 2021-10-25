@@ -35,23 +35,11 @@ var detectIncognito = function(callback) {
   }
 
   function isBrave() {
-    if (!isChrome()) {
-      return false;
-    }
-
-    if (window.navigator.brave !== undefined) {
-      if (window.navigator.brave.isBrave.name === "isBrave") {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    return isChrome() && navigator.brave !== undefined;
   }
 
   /**
-   * Safari (Safari for iOS & macOS v8.0 - v15.0)
+   * Safari (Safari for iOS & macOS)
    **/
 
   function macOS_safari14() {
@@ -181,12 +169,15 @@ var detectIncognito = function(callback) {
    **/
 
   function bravePrivateTest() {
-    var request = indexedDB.open("test", 2);
-
-    storageEstimateWrapper().then(function(response) {
-      console.log(response.usage);
-      callback(response.usage === 110 || response.usage === 261);
-    });
+    navigator.webkitTemporaryStorage.queryUsageAndQuota(
+      function(usedBytes, grantedBytes) {
+        console.log(grantedBytes);
+        callback(grantedBytes < 10000000000);
+      },
+      function(e) {
+        callback(false);
+      }
+    );
   }
 
   /**
