@@ -141,6 +141,8 @@ var detectIncognito = function(callback) {
   function storageQuotaChromePrivateTest() {
     storageEstimateWrapper().then(function(response) {
       callback(response.quota < getQuotaLimit());
+    }).catch(function(e) {
+      throw new Error("detectIncognito somehow failed to query storage quota");
     });
   }
 
@@ -175,7 +177,7 @@ var detectIncognito = function(callback) {
         callback(grantedBytes < 10000000000);
       },
       function(e) {
-        callback(false);
+        throw new Error("detectIncognito somehow failed to query storage quota");
       }
     );
   }
@@ -208,7 +210,7 @@ var detectIncognito = function(callback) {
     } else if (isMSIE()) {
       msiePrivateTest();
     } else {
-      throw "detectIncognito cannot determine the browser";
+      throw new Error("detectIncognito cannot determine the browser");
     }
   }
 
