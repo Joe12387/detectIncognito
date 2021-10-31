@@ -8,13 +8,12 @@
  *
  * Support: Safari for iOS   -- 8 to 15
  *          Safari for macOS <= 15
- *          Chrome/Chromium  -- 50 to 95 Dev
- *          Edge             -- 15 - 18; 79 to 95 Dev
- *          Firefox          -- 44 to 93 Beta
+ *          Chrome/Chromium  -- 50 to 96 Dev
+ *          Edge             -- 15 - 18; 79 to 96 Dev
+ *          Firefox          -- 44 to 94 Beta
  *          MSIE             >= 10
  *
  **/
-
 var detectIncognito = function(callback) {
   function isSafari() {
     var v = navigator.vendor;
@@ -32,10 +31,6 @@ var detectIncognito = function(callback) {
 
   function isMSIE() {
     return navigator.msSaveBlob !== undefined;
-  }
-
-  function isBrave() {
-    return isChrome() && navigator.brave !== undefined;
   }
 
   /**
@@ -111,39 +106,17 @@ var detectIncognito = function(callback) {
     return 1073741824;
   }
 
-  function storageEstimateWrapper() {
-    var n = navigator;
-    if (n.storage !== undefined && n.storage.estimate !== undefined) {
-      return n.storage.estimate();
-    }
-
-    if (n.webkitTemporaryStorage !== undefined && n.webkitTemporaryStorage.queryUsageAndQuota !== undefined) {
-      return new Promise(function(resolve, reject) {
-        n.webkitTemporaryStorage.queryUsageAndQuota(
-          function(usage, quota) {
-            resolve({
-              "quota": quota,
-              "usage": usage
-            });
-          },
-          reject
-        );
-      });
-    }
-
-    return Promise.resolve({
-      quota: NaN,
-      usage: NaN
-    });
-  }
-
   // >= 76
   function storageQuotaChromePrivateTest() {
-    storageEstimateWrapper().then(function(response) {
-      callback(response.quota < getQuotaLimit());
-    }).catch(function(e) {
-      throw new Error("detectIncognito somehow failed to query storage quota");
-    });
+    navigator.webkitTemporaryStorage.queryUsageAndQuota(
+      function(quota, usage) {
+        callback(quota < getQuotaLimit());
+      },
+      function(e) {
+        throw new Error("detectIncognito somehow failed to query storage quota");
+      }
+    );
+
   }
 
   // 50 to 75
@@ -167,22 +140,6 @@ var detectIncognito = function(callback) {
   }
 
   /**
-   * Brave
-   **/
-
-  function bravePrivateTest() {
-    navigator.webkitTemporaryStorage.queryUsageAndQuota(
-      function(usedBytes, grantedBytes) {
-        console.log(grantedBytes);
-        callback(grantedBytes < 10000000000);
-      },
-      function(e) {
-        throw new Error("detectIncognito somehow failed to query storage quota");
-      }
-    );
-  }
-
-  /**
    * Firefox
    **/
 
@@ -201,8 +158,6 @@ var detectIncognito = function(callback) {
   function main() {
     if (isSafari()) {
       safariPrivateTest();
-    } else if (isBrave()) {
-      bravePrivateTest();
     } else if (isChrome()) {
       chromePrivateTest();
     } else if (isFirefox()) {
