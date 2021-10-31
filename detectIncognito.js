@@ -113,7 +113,7 @@ var detectIncognito = function(callback) {
         callback(quota < getQuotaLimit());
       },
       function(e) {
-        throw new Error("detectIncognito somehow failed to query storage quota");
+        throw new Error("detectIncognito somehow failed to query storage quota: " + e.message);
       }
     );
 
