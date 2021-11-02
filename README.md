@@ -1,5 +1,12 @@
 # detectIncognito.js
-JS detection of Incognito & other private browsing modes on Chrome, Edge, Safari, Firefox, Brave and MSIE.
+detectIncognito.js can be used to detect private browsing modes on most modern browsers, as of November 2021.
+
+ * Detects Incognito mode on Google Chrome
+ * Detects Private Windows on Safari for macOS
+ * Detects Private Tabs on Safari for iOS
+ * Detects InPrivate Windows on Microsoft Edge
+ * Detects InPrivate Windows on Microsoft Internet Explorer
+ * Detects Private Windows in Brave
 
 DEMO: https://detectincognito.com/
 
