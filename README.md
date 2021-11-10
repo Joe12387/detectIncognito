@@ -26,3 +26,4 @@ If you are aware of any modern browsers this script does not work with, please l
 # Notes
  * This script does not detect Container Tabs on Firefox as they work differently compared to private mode.
  * An error will be thrown if the browser cannot be identified.
+ * The script only works remotely (i.e. on a web server). Running the script locally may produce a false result, or not run at all.
