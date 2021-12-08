@@ -13,9 +13,9 @@ DEMO: https://detectincognito.com/
 # Supported Browsers
  * Safari for iOS - 8 to 15
  * Safari for macOS <= 15
- * Chrome/Chromium - 50 to 96 Dev
- * Edge - 15 to 18; 79 to 96 Dev
- * Firefox - 44 to 94 Beta
+ * Chrome/Chromium - 50 to 96
+ * Edge - 15 to 18; 79 to 96
+ * Firefox - 44 to 95
  * MSIE >= 10
  * Brave <= 1.32
 
