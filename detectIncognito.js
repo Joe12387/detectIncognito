@@ -140,9 +140,6 @@ var detectIncognito = function(callback) {
   function storageQuotaChromePrivateTest() {
     navigator.webkitTemporaryStorage.queryUsageAndQuota(
       function(usage, quota) {
-        console.log(quota);
-        console.log(getQuotaLimit());
-        console.log(quota < getQuotaLimit());
         __callback(quota < getQuotaLimit());
       },
       function(e) {
