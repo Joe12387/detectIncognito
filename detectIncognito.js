@@ -1,20 +1,42 @@
 /**
  *
- * https://github.com/Joe12387/detectIncognito
- *
- * (c) 2021 Joe Rutkowski <Joe@dreggle.com>
+ * detectIncognito v21.12.0 - (c) 2021 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  * Incognito & Private Browsing detection
  *
  * Support: Safari for iOS   -- 8 to 15
  *          Safari for macOS <= 15
- *          Chrome/Chromium  -- 50 to 96 Dev
- *          Edge             -- 15 - 18; 79 to 96 Dev
- *          Firefox          -- 44 to 94 Beta
+ *          Chrome/Chromium  -- 50 to 96
+ *          Edge             -- 15 - 18; 79 to 96
+ *          Firefox          -- 44 to 95
  *          MSIE             >= 10
  *
  **/
 var detectIncognito = function(callback) {
+  var browserName = "Unknown";
+
+  function __callback(isPrivate) {
+    console.log(browserName);
+    callback({
+      isPrivate: isPrivate,
+      browserName: browserName
+    });
+  }
+  
+  function identifyChromium() {
+    var ua = navigator.userAgent;
+    if (ua.match(/Edg/)) {
+      return "Edge";
+    } else if (ua.match(/Chrome/)) {
+      if (navigator.brave !== undefined) {
+        return "Brave";
+      }
+      return "Chrome";
+    } else {
+      return "Chromium";
+    }
+  }
+  
   function assertEvalToString(value) {
     return value === eval.toString().length;
   }
@@ -45,9 +67,9 @@ var detectIncognito = function(callback) {
     try {
       window.safari.pushNotification.requestPermission("https://example.com", "private", {}, (function() {}));
     } catch (e) {
-      return callback(!new RegExp("gesture").test(e));
+      return __callback(!new RegExp("gesture").test(e));
     }
-    return callback(false);
+    return __callback(false);
   }
 
   function iOS_safari14() {
@@ -58,12 +80,12 @@ var detectIncognito = function(callback) {
 
     iframe.contentWindow.applicationCache.addEventListener("error", function() {
       tripped = true;
-      return callback(true);
+      return __callback(true);
     });
 
     setTimeout(function() {
       if (!tripped) {
-        callback(false);
+        __callback(false);
       }
     }, 100);
   }
@@ -74,27 +96,31 @@ var detectIncognito = function(callback) {
     try {
       openDB(null, null, null, null);
     } catch (e) {
-      return callback(true);
+      return __callback(true);
     }
     try {
       storage.setItem("test", "1");
       storage.removeItem("test");
     } catch (e) {
-      return callback(true);
+      return __callback(true);
     }
-    return callback(false);
+    return __callback(false);
   }
 
   function safariPrivateTest() {
     var w = window;
     if (navigator.maxTouchPoints !== undefined) {
       if (w.safari !== undefined && w.DeviceMotionEvent === undefined) {
+        browserName = "Safari for macOS";
         macOS_safari14();
       } else {
+        browserName = "Safari for iOS";
         iOS_safari14();
       }
-    } else {
+    } else if (w.DeviceMotionEvent !== undefined) {
       oldSafariTest();
+    } else {
+      throw new Error("Could not identify this version of Safari");
     }
   }
 
@@ -113,8 +139,11 @@ var detectIncognito = function(callback) {
   // >= 76
   function storageQuotaChromePrivateTest() {
     navigator.webkitTemporaryStorage.queryUsageAndQuota(
-      function(quota, usage) {
-        callback(quota < getQuotaLimit());
+      function(usage, quota) {
+        console.log(quota);
+        console.log(getQuotaLimit());
+        console.log(quota < getQuotaLimit());
+        __callback(quota < getQuotaLimit());
       },
       function(e) {
         throw new Error("detectIncognito somehow failed to query storage quota: " + e.message);
@@ -126,10 +155,10 @@ var detectIncognito = function(callback) {
   function oldChromePrivateTest() {
     var fs = window.webkitRequestFileSystem;
     var success = function() {
-      callback(false);
+      __callback(false);
     };
     var error = function() {
-      callback(true);
+      __callback(true);
     };
     fs(0, 1, success, error);
   }
@@ -147,7 +176,7 @@ var detectIncognito = function(callback) {
    **/
 
   function firefoxPrivateTest() {
-    callback(navigator.serviceWorker === undefined);
+    __callback(navigator.serviceWorker === undefined);
   }
 
   /**
@@ -155,17 +184,20 @@ var detectIncognito = function(callback) {
    **/
 
   function msiePrivateTest() {
-    callback(window.indexedDB === undefined);
+    __callback(window.indexedDB === undefined);
   }
 
   function main() {
     if (isSafari()) {
       safariPrivateTest();
     } else if (isChrome()) {
+      browserName = identifyChromium();
       chromePrivateTest();
     } else if (isFirefox()) {
+      browserName = "Firefox";
       firefoxPrivateTest();
     } else if (isMSIE()) {
+      browserName = "Internet Explorer";
       msiePrivateTest();
     } else {
       throw new Error("detectIncognito cannot determine the browser");

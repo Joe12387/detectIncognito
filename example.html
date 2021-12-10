@@ -30,14 +30,36 @@
     </div>
   </div>
   <script>
+    function getModeName(browserName) {
+      switch (browserName) {
+        case "Safari for macOS":
+        case "Firefox":
+        case "Brave":
+          return "a Private Window";
+          break;
+        case "Safari for iOS":
+          return "a Private Tab";
+          break;
+        case "Chrome":
+        case "Chromium":
+          return "an Incognito Window";
+          break;
+        case "Internet Explorer":
+        case "Edge":
+          return "a InPrivate Window";
+          break;
+      }
+      throw new Error("Could not get mode name");
+    }
+    
     function detect() {
       try {
-        detectIncognito(function(isPrivate) {
+        detectIncognito(function(obj) {
           var answer = document.getElementById("answer");
-          if (isPrivate) {
-            answer.innerHTML = "<b>Yes</b>. You are using a browser window in Incognito or Private Browsing mode.";
+          if (obj.isPrivate) {
+            answer.innerHTML = "<b>Yes</b>. You are using " + obj.browserName + " in " + getModeName(obj.browserName) + ".";
           } else {
-            answer.innerHTML = "<b>No</b>. You are using a regular browser window.";
+            answer.innerHTML = "<b>No</b>. You are using " + obj.browserName + " in a regular browser window.";
           }
         });
       } catch (e) {
