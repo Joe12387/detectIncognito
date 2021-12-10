@@ -15,22 +15,26 @@
  *
  **/
 var detectIncognito = function(callback) {
+  function assertEvalToString(value) {
+    return value === eval.toString().length;
+  }
+  
   function isSafari() {
     var v = navigator.vendor;
-    return v !== undefined && v.indexOf("Apple") === 0;
+    return v !== undefined && v.indexOf("Apple") === 0 && assertEvalToString(37);
   }
 
   function isChrome() {
     var v = navigator.vendor;
-    return v !== undefined && v.indexOf("Google") === 0;
+    return v !== undefined && v.indexOf("Google") === 0 && assertEvalToString(33);
   }
 
   function isFirefox() {
-    return document.documentElement !== undefined && document.documentElement.style.MozAppearance !== undefined;
+    return document.documentElement !== undefined && document.documentElement.style.MozAppearance !== undefined && assertEvalToString(37);
   }
 
   function isMSIE() {
-    return navigator.msSaveBlob !== undefined;
+    return navigator.msSaveBlob !== undefined && assertEvalToString(39);
   }
 
   /**
@@ -116,7 +120,6 @@ var detectIncognito = function(callback) {
         throw new Error("detectIncognito somehow failed to query storage quota: " + e.message);
       }
     );
-
   }
 
   // 50 to 75

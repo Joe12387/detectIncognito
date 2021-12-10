@@ -31,14 +31,20 @@
   </div>
   <script>
     function detect() {
-      detectIncognito(function(isPrivate) {
+      try {
+        detectIncognito(function(isPrivate) {
+          var answer = document.getElementById("answer");
+          if (isPrivate) {
+            answer.innerHTML = "<b>Yes</b>. You are using a browser window in Incognito or Private Browsing mode.";
+          } else {
+            answer.innerHTML = "<b>No</b>. You are using a regular browser window.";
+          }
+        });
+      } catch (e) {
         var answer = document.getElementById("answer");
-        if (isPrivate) {
-          answer.innerHTML = "<b>Yes</b>. You are using a browser window in Incognito or Private Browsing mode.";
-        } else {
-          answer.innerHTML = "<b>No</b>. You are using a regular browser window.";
-        }
-      });
+        answer.innerHTML = "There was an error. Check console for further information.";
+        console.log("Could not get Incognito status", e);
+      }
     }
   </script>
   <script src="detectIncognito.js"></script>
