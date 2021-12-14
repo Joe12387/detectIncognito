@@ -1,6 +1,6 @@
 /**
  *
- * detectIncognito v21.12.0 - (c) 2021 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v21.12.1 - (c) 2021 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  * Incognito & Private Browsing detection
  *
