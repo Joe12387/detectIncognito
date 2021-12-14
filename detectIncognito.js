@@ -113,14 +113,14 @@ var detectIncognito = function(callback) {
       if (w.safari !== undefined && w.DeviceMotionEvent === undefined) {
         browserName = "Safari for macOS";
         macOS_safari14();
-      } else {
+      } else if (w.DeviceMotionEvent !== undefined) {
         browserName = "Safari for iOS";
         iOS_safari14();
+      } else {
+        throw new Error("Could not identify this version of Safari");
       }
-    } else if (w.DeviceMotionEvent !== undefined) {
-      oldSafariTest();
     } else {
-      throw new Error("Could not identify this version of Safari");
+      oldSafariTest();
     }
   }
 
