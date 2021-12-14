@@ -24,12 +24,6 @@ Please note that although this script works on almost all modern browsers, detec
 
 If you are aware of any modern browsers this script does not work with, please let me know by creating an issue.
 
-# Changelog
- v21.12.0 - Dec 10, 2021 (mandatory)
- * [*] Chrome Fix: fixed Chrome using usage instead of quota
- * [*] The callback now returns an object instead of a boolean. obj.isPrivate will now return the status of private mode.
- * [+] The callback now includes the browser name as obj.browserName.
-
 # Notes
  * This script does not detect Container Tabs on Firefox as they work differently compared to private mode.
  * An error will be thrown if the browser cannot be identified.
