@@ -1,6 +1,6 @@
 /**
  *
- * detectIncognito v21.12.1 - (c) 2021 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v22.01.x - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  * Incognito & Private Browsing detection
  *
@@ -16,7 +16,6 @@ var detectIncognito = function(callback) {
   var browserName = "Unknown";
 
   function __callback(isPrivate) {
-    console.log(browserName);
     callback({
       isPrivate: isPrivate,
       browserName: browserName
@@ -25,11 +24,13 @@ var detectIncognito = function(callback) {
   
   function identifyChromium() {
     var ua = navigator.userAgent;
-    if (ua.match(/Edg/)) {
-      return "Edge";
-    } else if (ua.match(/Chrome/)) {
-      if (navigator.brave !== undefined) {
+    if (ua.match(/Chrome/)) {
+      if (ua.match(/Edg/)) {
+        return "Edge"
+      } else if (navigator.brave !== undefined) {
         return "Brave";
+      } else if (navigator.opr !== undefined) {
+        return "Opera";
       }
       return "Chrome";
     } else {
@@ -117,7 +118,7 @@ var detectIncognito = function(callback) {
         browserName = "Safari for iOS";
         iOS_safari14();
       } else {
-        throw new Error("Could not identify this version of Safari");
+        throw new Error("detectIncognito Could not identify this version of Safari");
       }
     } else {
       oldSafariTest();

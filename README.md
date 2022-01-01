@@ -1,5 +1,5 @@
 # detectIncognito.js
-detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of December 2021.
+detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of January 2022.
 
  * Detects Incognito mode on Google Chrome
  * Detects Private Windows on Safari for macOS
@@ -8,6 +8,7 @@ detectIncognito.js can be used to detect incognito mode & other private browsing
  * Detects InPrivate Windows on Microsoft Edge
  * Detects InPrivate Windows on Microsoft Internet Explorer
  * Detects Private Windows in Brave
+ * Detects Private Windows in Opera
 
 DEMO: https://detectincognito.com/
 
@@ -18,7 +19,7 @@ DEMO: https://detectincognito.com/
  * Edge - 15 to 18; 79 to 96
  * Firefox - 44 to 95
  * MSIE >= 10
- * Brave <= 1.32
+ * Brave <= 1.33
 
 Please note that although this script works on almost all modern browsers, detecting private modes in browsers is very much an arms race. As such, I cannot guarantee that this script will continue to work into the future. However, I will continue to actively maintain this script to support as many browsers as is possible.
 
