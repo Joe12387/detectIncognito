@@ -1,5 +1,5 @@
 # detectIncognito.js
-detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of February 2022.
+detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of March 2022.
 
  * Detects Incognito mode on Google Chrome
  * Detects Private Windows on Safari for macOS
