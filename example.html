@@ -18,7 +18,7 @@
       margin-left: -200px;
     }
   </style>
-  <meta name="description" content="The only working Javascript library to detect incognito mode & other private browsing modes as of December 2021."/>
+  <meta name="description" content="The only working Javascript library to detect incognito mode & other private browsing modes as of March 2022."/>
 </head>
 
 <body onload="detect()">
@@ -55,20 +55,17 @@
     }
     
     function detect() {
-      try {
-        detectIncognito(function(obj) {
-          var answer = document.getElementById("answer");
-          if (obj.isPrivate) {
-            answer.innerHTML = "<b>Yes</b>. You are using " + obj.browserName + " in " + getModeName(obj.browserName) + ".";
-          } else {
-            answer.innerHTML = "<b>No</b>. You are using " + obj.browserName + " in a regular browser window.";
-          }
-        });
-      } catch (e) {
-        var answer = document.getElementById("answer");
-        answer.innerHTML = "There was an error. Check console for further information.";
-        console.log("Could not get Incognito status", e);
-      }
+      var a = document.getElementById("answer");
+      detectIncognito().then(function(result) {
+        if (result.isPrivate) {
+          a.innerHTML = "<b>Yes</b>. You are using " + result.browserName + " in " + getModeName(result.browserName) + ".";
+        } else {
+          a.innerHTML = "<b>No</b>. You are using " + result.browserName + " in a regular browser window.";
+        }
+      }).catch(function(error) {
+        a.innerHTML = "There was an error. Check console for further information.";
+        console.log(error);
+      });
     }
   </script>
   <script src="detectIncognito.js"></script>
