@@ -1,15 +1,6 @@
 /**
  *
- * detectIncognito v22.01.x - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
- *
- * Incognito & Private Browsing detection
- *
- * Support: Safari for iOS   -- 8 to 15
- *          Safari for macOS <= 15
- *          Chrome/Chromium  -- 50 to 96
- *          Edge             -- 15 - 18; 79 to 96
- *          Firefox          -- 44 to 95
- *          MSIE             >= 10
+ * detectIncognito v1.0.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 var detectIncognito = function() {
