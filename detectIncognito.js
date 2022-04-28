@@ -133,7 +133,8 @@ var detectIncognito = function() {
     // >= 76
     function storageQuotaChromePrivateTest() {
       navigator.webkitTemporaryStorage.queryUsageAndQuota(
-        function(usage, quota) {
+        // optimize unused parameter
+        function(_, quota) {
           __callback(quota < getQuotaLimit());
         },
         function(e) {
@@ -141,7 +142,21 @@ var detectIncognito = function() {
         }
       );
     }
-  
+    
+    function newChromePrivateTest() {
+      // https://developer.chrome.com/blog/estimating-available-storage-space/
+      // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/storage
+      if ('storage' in navigator && 'estimate' in navigator.storage) {
+        return navigator.storage.estimate().then(({ quota }) => {
+          __callback(quota < getQuotaLimit());
+        }).catch(e => {
+          reject(new Error("[navigator.storage.estimate] detectIncognito somehow failed to query storage quota: " + e.message));
+        });
+      }
+
+      storageQuotaChromePrivateTest();
+    }
+
     // 50 to 75
     function oldChromePrivateTest() {
       var fs = window.webkitRequestFileSystem;
@@ -156,7 +171,7 @@ var detectIncognito = function() {
   
     function chromePrivateTest() {
       if (Promise !== undefined && Promise.allSettled !== undefined) {
-        storageQuotaChromePrivateTest();
+        newChromePrivateTest();
       } else {
         oldChromePrivateTest();
       }
