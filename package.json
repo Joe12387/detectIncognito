@@ -1,0 +1,27 @@
+{
+  "name": "detect-incognito",
+  "version": "1.0.0",
+  "description": "detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of March 2022.",
+  "main": "dist/detectIncognito.js",
+  "types": "dist",
+  "typings": "dist/detectIncognito.d.ts",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Joe12387/detectIncognito.git"
+  },
+  "keywords": [
+    "incognito"
+  ],
+  "author": "Joe12387",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.6.4"
+  }
+}
