@@ -1,9 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.detectIncognito = void 0;
 /**
  *
  * detectIncognito v1.0.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
-export const detectIncognito = function () {
+var detectIncognito = function () {
     return new Promise(function (resolve, reject) {
         var browserName = "Unknown";
         function __callback(isPrivate) {
@@ -189,4 +192,5 @@ export const detectIncognito = function () {
         main();
     });
 };
+exports.detectIncognito = detectIncognito;
 //# sourceMappingURL=detectIncognito.js.map
