@@ -60,7 +60,7 @@ var detectIncognito = function() {
       try {
         var db = window.indexedDB.open("test", 1);
         db.onupgradeneeded = function(i) {
-          var res = db.target.result;
+          var res = i.target.result;
           try {
             res.createObjectStore("test", {
               autoIncrement: true
