@@ -33,15 +33,17 @@
   <script>
     function getModeName(browserName) {
       switch (browserName) {
-        case "Safari for macOS":
+        case "Safari":
         case "Firefox":
         case "Brave":
         case "Opera":
           return "a Private Window";
           break;
+/*
         case "Safari for iOS":
           return "a Private Tab";
           break;
+*/
         case "Chrome":
         case "Chromium":
           return "an Incognito Window";
@@ -68,7 +70,7 @@
       });
     }
   </script>
-  <script src="detectIncognito.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@main/detectIncognito.min.js"></script>
 </body>
 
 </html>
