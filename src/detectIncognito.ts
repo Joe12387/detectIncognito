@@ -1,6 +1,6 @@
 /**
  *
- * detectIncognito v1.0.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.1.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 export const detectIncognito = function (): Promise<{
@@ -69,39 +69,38 @@ export const detectIncognito = function (): Promise<{
      * Safari (Safari for iOS & macOS)
      **/
 
-    function macOS_safari14() {
+    function newSafariTest() {
       try {
-        (window as any).safari.pushNotification.requestPermission(
-          "https://example.com",
-          "private",
-          {},
-          function () {}
-        );
-      } catch (e: any) {
-        return __callback(!new RegExp("gesture").test(e));
+        var db = window.indexedDB.open("test", 1);
+
+        db.onupgradeneeded = function (i) {
+          var res = i.target?.result;
+
+          try {
+            res.createObjectStore("test", {
+              autoIncrement: true,
+            }).put(new Blob);
+
+            __callback(false);
+          } catch (e) {
+            let message = e;
+
+            if (e instanceof Error) {
+              message = e.message ?? e;
+            }
+
+            if (typeof message !== 'string') {
+              return __callback(false);
+            }
+
+            let matchesExpectedError = /BlobURLs are not yet supported/.test(message);
+
+            return __callback(matchesExpectedError);
+          }
+        }
+      } catch (e) {
+        return __callback(false);
       }
-      return __callback(false);
-    }
-
-    function iOS_safari14() {
-      var tripped = false;
-      var iframe = document.createElement("iframe");
-      iframe.style.display = "none";
-      document.body.appendChild(iframe);
-
-      (iframe as any).contentWindow.applicationCache.addEventListener(
-        "error",
-        function () {
-          tripped = true;
-          return __callback(true);
-        }
-      );
-
-      setTimeout(function () {
-        if (!tripped) {
-          __callback(false);
-        }
-      }, 100);
     }
 
     function oldSafariTest() {
@@ -122,23 +121,9 @@ export const detectIncognito = function (): Promise<{
     }
 
     function safariPrivateTest() {
-      var w = window as any;
       if (navigator.maxTouchPoints !== undefined) {
-        if (w.safari !== undefined && w.DeviceMotionEvent === undefined) {
-          browserName = "Safari for macOS";
-          macOS_safari14();
-        } else if (w.DeviceMotionEvent !== undefined) {
-          browserName = "Safari for iOS";
-          iOS_safari14();
-        } else {
-          reject(
-            new Error(
-              "detectIncognito Could not identify this version of Safari"
-            )
-          );
-        }
+        newSafariTest();
       } else {
-        browserName = "Safari";
         oldSafariTest();
       }
     }
