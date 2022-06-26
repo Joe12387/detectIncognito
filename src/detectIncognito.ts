@@ -199,6 +199,7 @@ export const detectIncognito = function (): Promise<{
 
     function main() {
       if (isSafari()) {
+        browserName = 'Safari';
         safariPrivateTest();
       } else if (isChrome()) {
         browserName = identifyChromium();
