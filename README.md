@@ -1,6 +1,6 @@
 # detectIncognito.js
 
-detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of June 2022.
+detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2022.
 
 - Detects Incognito mode on Google Chrome
 - Detects Private Windows on Safari for macOS
@@ -58,4 +58,6 @@ If you are aware of any modern browsers this script does not work with, please l
 - This script does not detect Container Tabs on Firefox as they work differently compared to private mode.
 - An error will be thrown if the browser cannot be identified.
 - The script only works remotely (i.e. on a web server). Running the script locally may produce a false result, or not run at all.
-- [Issue #3](https://github.com/Joe12387/detectIncognito/issues/3 "Issue #3"): The script may cause a false result in certain automated testing scenarios.
+
+# Similar Projects
+- [Overprowered Browser Fingerprinting Script](https://github.com/Joe12387/OP-Fingerprinting-Script "Overprowered Browser Fingerprinting Script")
