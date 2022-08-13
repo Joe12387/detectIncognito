@@ -60,4 +60,4 @@ If you are aware of any modern browsers this script does not work with, please l
 - The script only works remotely (i.e. on a web server). Running the script locally may produce a false result, or not run at all.
 
 # Similar Projects
-- [Overprowered Browser Fingerprinting Script](https://github.com/Joe12387/OP-Fingerprinting-Script "Overprowered Browser Fingerprinting Script")
+- [Overpowered Browser Fingerprinting Script](https://github.com/Joe12387/OP-Fingerprinting-Script "Overpowered Browser Fingerprinting Script")
