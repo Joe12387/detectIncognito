@@ -174,7 +174,7 @@ export const detectIncognito = function (): Promise<{
     }
 
     function chromePrivateTest() {
-      if (Promise !== undefined && (Promise as any).allSettled !== undefined) {
+      if (self.Promise !== undefined && (self.Promise as any).allSettled !== undefined) {
         storageQuotaChromePrivateTest();
       } else {
         oldChromePrivateTest();
