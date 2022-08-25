@@ -12,6 +12,10 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "lib": [
+      "es2016",
+      "dom"
+    ]
   }
 }

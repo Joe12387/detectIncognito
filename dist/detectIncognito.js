@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.detectIncognito = void 0;
 /**
  *
- * detectIncognito v1.0.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.1.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 var detectIncognito = function () {
@@ -55,29 +55,34 @@ var detectIncognito = function () {
         /**
          * Safari (Safari for iOS & macOS)
          **/
-        function macOS_safari14() {
+        function newSafariTest() {
             try {
-                window.safari.pushNotification.requestPermission("https://example.com", "private", {}, function () { });
+                var db = window.indexedDB.open("test", 1);
+                db.onupgradeneeded = function (i) {
+                    var _a, _b;
+                    var res = (_a = i.target) === null || _a === void 0 ? void 0 : _a.result;
+                    try {
+                        res.createObjectStore("test", {
+                            autoIncrement: true,
+                        }).put(new Blob);
+                        __callback(false);
+                    }
+                    catch (e) {
+                        var message = e;
+                        if (e instanceof Error) {
+                            message = (_b = e.message) !== null && _b !== void 0 ? _b : e;
+                        }
+                        if (typeof message !== 'string') {
+                            return __callback(false);
+                        }
+                        var matchesExpectedError = /BlobURLs are not yet supported/.test(message);
+                        return __callback(matchesExpectedError);
+                    }
+                };
             }
             catch (e) {
-                return __callback(!new RegExp("gesture").test(e));
+                return __callback(false);
             }
-            return __callback(false);
-        }
-        function iOS_safari14() {
-            var tripped = false;
-            var iframe = document.createElement("iframe");
-            iframe.style.display = "none";
-            document.body.appendChild(iframe);
-            iframe.contentWindow.applicationCache.addEventListener("error", function () {
-                tripped = true;
-                return __callback(true);
-            });
-            setTimeout(function () {
-                if (!tripped) {
-                    __callback(false);
-                }
-            }, 100);
         }
         function oldSafariTest() {
             var openDB = window.openDatabase;
@@ -98,22 +103,10 @@ var detectIncognito = function () {
             return __callback(false);
         }
         function safariPrivateTest() {
-            var w = window;
             if (navigator.maxTouchPoints !== undefined) {
-                if (w.safari !== undefined && w.DeviceMotionEvent === undefined) {
-                    browserName = "Safari for macOS";
-                    macOS_safari14();
-                }
-                else if (w.DeviceMotionEvent !== undefined) {
-                    browserName = "Safari for iOS";
-                    iOS_safari14();
-                }
-                else {
-                    reject(new Error("detectIncognito Could not identify this version of Safari"));
-                }
+                newSafariTest();
             }
             else {
-                browserName = "Safari";
                 oldSafariTest();
             }
         }
@@ -150,7 +143,7 @@ var detectIncognito = function () {
             fs(0, 1, success, error);
         }
         function chromePrivateTest() {
-            if (Promise !== undefined && Promise.allSettled !== undefined) {
+            if (self.Promise !== undefined && self.Promise.allSettled !== undefined) {
                 storageQuotaChromePrivateTest();
             }
             else {
@@ -171,6 +164,7 @@ var detectIncognito = function () {
         }
         function main() {
             if (isSafari()) {
+                browserName = 'Safari';
                 safariPrivateTest();
             }
             else if (isChrome()) {
