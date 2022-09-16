@@ -67,11 +67,7 @@ var detectIncognito = function() {
             }).put(new Blob);
             __callback(false);
           } catch (e) {
-            if (/BlobURLs are not yet supported/.test(e.message)) {
-              __callback(true);
-            } else {
-              __callback(false);
-            }
+            __callback(/BlobURLs are not yet supported/.test(e.message));
           }
         }
       } catch (e) {
