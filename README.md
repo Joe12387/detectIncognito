@@ -26,7 +26,7 @@ Get script from CDN
 Or install from NPM
 
 ```
-npm i [detectincognitojs](https://www.npmjs.com/package/detectincognitojs "detectincognitojs")
+npm i detectincognitojs
 ```
 
 ```javascript
