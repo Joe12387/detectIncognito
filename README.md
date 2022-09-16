@@ -24,11 +24,11 @@ Get script from CDN
 Or install from NPM
 
 ```
-npm i detect-incognito
+npm i detectincognitojs
 ```
 
 ```javascript
-import { detectIncognito } from "detect-incognito";
+import { detectIncognito } from "detectincognitojs";
 ```
 
 Run the detect function
@@ -43,10 +43,10 @@ detectIncognito().then((result) => {
 
 - Safari for iOS - 8 to 15
 - Safari for macOS <= 15
-- Chrome/Chromium - 50 to 102
-- Edge - 15 to 18; 79 to 102
-- Firefox - 44 to 101
-- Brave <= 1.39
+- Chrome/Chromium - 50 to 105
+- Edge - 15 to 18; 79 to 105
+- Firefox - 44 to 104
+- Brave <= 1.43
 - MSIE == 11 (Promise polyfill required)
 
 Please note that although this script works on almost all modern browsers, detecting private modes in browsers is very much an arms race. As such, I cannot guarantee that this script will continue to work into the future. However, I will continue to actively maintain this script to support as many browsers as is possible.
