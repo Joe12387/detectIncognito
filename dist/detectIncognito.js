@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.detectIncognito = void 0;
 /**
  *
- * detectIncognito v1.1.1 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.1.2 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 var detectIncognito = function () {
@@ -56,8 +56,9 @@ var detectIncognito = function () {
          * Safari (Safari for iOS & macOS)
          **/
         function newSafariTest() {
+            var tmp_name = String(Math.random());
             try {
-                var db = window.indexedDB.open("test", 1);
+                var db = window.indexedDB.open(tmp_name, 1);
                 db.onupgradeneeded = function (i) {
                     var _a, _b;
                     var res = (_a = i.target) === null || _a === void 0 ? void 0 : _a.result;
@@ -77,6 +78,10 @@ var detectIncognito = function () {
                         }
                         var matchesExpectedError = /BlobURLs are not yet supported/.test(message);
                         return __callback(matchesExpectedError);
+                    }
+                    finally {
+                        res.close();
+                        window.indexedDB.deleteDatabase(tmp_name);
                     }
                 };
             }

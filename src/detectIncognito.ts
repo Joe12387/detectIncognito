@@ -1,6 +1,6 @@
 /**
  *
- * detectIncognito v1.1.1 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.1.2 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 export const detectIncognito = function (): Promise<{
@@ -70,8 +70,10 @@ export const detectIncognito = function (): Promise<{
      **/
 
     function newSafariTest() {
+      var tmp_name = String(Math.random());
+
       try {
-        var db = window.indexedDB.open("test", 1);
+        var db = window.indexedDB.open(tmp_name, 1);
 
         db.onupgradeneeded = function (i) {
           var res = i.target?.result;
@@ -83,7 +85,7 @@ export const detectIncognito = function (): Promise<{
 
             __callback(false);
           } catch (e) {
-            let message = e;
+            var message = e;
 
             if (e instanceof Error) {
               message = e.message ?? e;
@@ -93,9 +95,12 @@ export const detectIncognito = function (): Promise<{
               return __callback(false);
             }
 
-            let matchesExpectedError = /BlobURLs are not yet supported/.test(message);
+            var matchesExpectedError = /BlobURLs are not yet supported/.test(message);
 
             return __callback(matchesExpectedError);
+          } finally {
+            res.close();
+            window.indexedDB.deleteDatabase(tmp_name);
           }
         }
       } catch (e) {
