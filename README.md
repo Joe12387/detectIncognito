@@ -1,3 +1,5 @@
+Note: The npm package is now [detectincognitojs](https://www.npmjs.com/package/detectincognitojs "detectincognitojs").
+
 # detectIncognito.js
 
 detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2022.
