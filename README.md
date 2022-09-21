@@ -43,8 +43,8 @@ detectIncognito().then((result) => {
 
 # Supported Browsers
 
-- Safari for iOS - 8 to 15
-- Safari for macOS <= 15
+- Safari for iOS - 8 to 16
+- Safari for macOS <= 16
 - Chrome/Chromium - 50 to 105
 - Edge - 15 to 18; 79 to 105
 - Firefox - 44 to 104
