@@ -1,9 +1,7 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.detectIncognito = void 0;
 /**
  *
- * detectIncognito v1.1.2 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.1.3 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 var detectIncognito = function () {
@@ -191,5 +189,4 @@ var detectIncognito = function () {
         main();
     });
 };
-exports.detectIncognito = detectIncognito;
 //# sourceMappingURL=detectIncognito.js.map

@@ -1,1 +1,1 @@
-{"version":3,"file":"detectIncognito.d.ts","sourceRoot":"","sources":["../src/detectIncognito.ts"],"names":[],"mappings":"AAAA;;;;IAII;AACJ,eAAO,MAAM,eAAe,QAAgB,QAAQ;IAClD,SAAS,EAAE,OAAO,CAAC;IACnB,WAAW,EAAE,MAAM,CAAC;CACrB,CAwNA,CAAC"}
+{"version":3,"file":"detectIncognito.d.ts","sourceRoot":"","sources":["../src/detectIncognito.ts"],"names":[],"mappings":"AAAA;;;;IAII;AACJ,QAAA,MAAM,eAAe,QAAgB,QAAQ;IAC3C,SAAS,EAAE,OAAO,CAAC;IACnB,WAAW,EAAE,MAAM,CAAC;CACrB,CAwNA,CAAC"}
