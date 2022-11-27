@@ -57,6 +57,7 @@ If you are aware of any modern browsers this script does not work with, please l
 
 # Notes
 
+- There will be a false positive in certain browser configurations, as well as in Chrome's Guest mode. ([Issue #21](https://github.com/Joe12387/detectIncognito/issues/21)).
 - This script does not detect Container Tabs on Firefox as they work differently compared to private mode.
 - An error will be thrown if the browser cannot be identified.
 - The script only works remotely (i.e. on a web server). Running the script locally may produce a false result, or not run at all.
