@@ -1,24 +1,24 @@
 /**
  *
- * detectIncognito v1.1.3 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.1.4 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
-const detectIncognito = function (): Promise<{
+ const detectIncognito = function (): Promise<{
   isPrivate: boolean;
   browserName: string;
 }> {
   return new Promise(function (resolve, reject) {
-    var browserName = "Unknown";
+    let browserName = "Unknown";
 
-    function __callback(isPrivate: any) {
+    function __callback(isPrivate: any): void {
       resolve({
         isPrivate: isPrivate,
         browserName: browserName,
       });
     }
 
-    function identifyChromium() {
-      var ua = navigator.userAgent;
+    function identifyChromium(): string {
+      const ua = navigator.userAgent;
       if (ua.match(/Chrome/)) {
         if ((navigator as any).brave !== undefined) {
           return "Brave";
@@ -33,25 +33,25 @@ const detectIncognito = function (): Promise<{
       }
     }
 
-    function assertEvalToString(value: any) {
+    function assertEvalToString(value: any): boolean {
       return value === eval.toString().length;
     }
 
-    function isSafari() {
-      var v = navigator.vendor;
+    function isSafari(): boolean {
+      const v = navigator.vendor;
       return (
         v !== undefined && v.indexOf("Apple") === 0 && assertEvalToString(37)
       );
     }
 
-    function isChrome() {
-      var v = navigator.vendor;
+    function isChrome(): boolean {
+      const v = navigator.vendor;
       return (
         v !== undefined && v.indexOf("Google") === 0 && assertEvalToString(33)
       );
     }
 
-    function isFirefox() {
+    function isFirefox(): boolean {
       return (
         document.documentElement !== undefined &&
         (document as any).documentElement.style.MozAppearance !== undefined &&
@@ -59,7 +59,7 @@ const detectIncognito = function (): Promise<{
       );
     }
 
-    function isMSIE() {
+    function isMSIE(): boolean {
       return (
         (navigator as any).msSaveBlob !== undefined && assertEvalToString(39)
       );
@@ -69,14 +69,14 @@ const detectIncognito = function (): Promise<{
      * Safari (Safari for iOS & macOS)
      **/
 
-    function newSafariTest() {
-      var tmp_name = String(Math.random());
+    function newSafariTest(): void {
+      const tmp_name = String(Math.random());
 
       try {
-        var db = window.indexedDB.open(tmp_name, 1);
+        const db = window.indexedDB.open(tmp_name, 1);
 
         db.onupgradeneeded = function (i) {
-          var res = i.target?.result;
+          const res = i.target?.result;
 
           try {
             res.createObjectStore("test", {
@@ -85,7 +85,7 @@ const detectIncognito = function (): Promise<{
 
             __callback(false);
           } catch (e) {
-            var message = e;
+            let message = e;
 
             if (e instanceof Error) {
               message = e.message ?? e;
@@ -95,7 +95,7 @@ const detectIncognito = function (): Promise<{
               return __callback(false);
             }
 
-            var matchesExpectedError = /BlobURLs are not yet supported/.test(message);
+            const matchesExpectedError = /BlobURLs are not yet supported/.test(message);
 
             return __callback(matchesExpectedError);
           } finally {
@@ -108,9 +108,9 @@ const detectIncognito = function (): Promise<{
       }
     }
 
-    function oldSafariTest() {
-      var openDB = (window as any).openDatabase;
-      var storage = window.localStorage;
+    function oldSafariTest(): void {
+      const openDB = (window as any).openDatabase;
+      const storage = window.localStorage;
       try {
         openDB(null, null, null, null);
       } catch (e) {
@@ -125,7 +125,7 @@ const detectIncognito = function (): Promise<{
       return __callback(false);
     }
 
-    function safariPrivateTest() {
+    function safariPrivateTest(): void {
       if (navigator.maxTouchPoints !== undefined) {
         newSafariTest();
       } else {
@@ -137,8 +137,8 @@ const detectIncognito = function (): Promise<{
      * Chrome
      **/
 
-    function getQuotaLimit() {
-      var w = window as any;
+    function getQuotaLimit(): number {
+      const w = window as any;
       if (
         w.performance !== undefined &&
         w.performance.memory !== undefined &&
@@ -150,7 +150,7 @@ const detectIncognito = function (): Promise<{
     }
 
     // >= 76
-    function storageQuotaChromePrivateTest() {
+    function storageQuotaChromePrivateTest(): void {
       (navigator as any).webkitTemporaryStorage.queryUsageAndQuota(
         function (usage: any, quota: any) {
           __callback(quota < getQuotaLimit());
@@ -167,18 +167,18 @@ const detectIncognito = function (): Promise<{
     }
 
     // 50 to 75
-    function oldChromePrivateTest() {
-      var fs = (window as any).webkitRequestFileSystem;
-      var success = function () {
+    function oldChromePrivateTest(): void {
+      const fs = (window as any).webkitRequestFileSystem;
+      const success = function () {
         __callback(false);
       };
-      var error = function () {
+      const error = function () {
         __callback(true);
       };
       fs(0, 1, success, error);
     }
 
-    function chromePrivateTest() {
+    function chromePrivateTest(): void {
       if (self.Promise !== undefined && (self.Promise as any).allSettled !== undefined) {
         storageQuotaChromePrivateTest();
       } else {
@@ -190,7 +190,7 @@ const detectIncognito = function (): Promise<{
      * Firefox
      **/
 
-    function firefoxPrivateTest() {
+    function firefoxPrivateTest(): void {
       __callback(navigator.serviceWorker === undefined);
     }
 
@@ -198,11 +198,11 @@ const detectIncognito = function (): Promise<{
      * MSIE
      **/
 
-    function msiePrivateTest() {
+    function msiePrivateTest(): void {
       __callback(window.indexedDB === undefined);
     }
 
-    function main() {
+    function main(): void {
       if (isSafari()) {
         browserName = 'Safari';
         safariPrivateTest();

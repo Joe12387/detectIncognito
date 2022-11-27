@@ -1,12 +1,12 @@
 {
   "name": "detectincognitojs",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of September 2022.",
   "main": "dist/detectIncognito.js",
   "types": "dist",
   "typings": "dist/detectIncognito.d.ts",
   "scripts": {
-    "build": "tsc -p . && npx uglify-js ./dist/detectIncognito.js -o ./dist/detectIncognito.min.js"
+    "build": "tsc -p . && npx uglify-js ./dist/detectIncognito.js -o ./dist/detectIncognito.min.js && cp ./dist/{detectIncognito.js,detectIncognito.min.js} ."
   },
   "files": [
     "dist",
