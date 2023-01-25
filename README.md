@@ -2,7 +2,7 @@ Note: The npm package is now [detectincognitojs](https://www.npmjs.com/package/d
 
 # detectIncognito.js
 
-detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2022.
+detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2023.
 
 - Detects Incognito mode on Google Chrome
 - Detects Private Windows on Safari for macOS
@@ -45,10 +45,10 @@ detectIncognito().then((result) => {
 
 - Safari for iOS - 8 to 16
 - Safari for macOS <= 16
-- Chrome/Chromium - 50 to 105
-- Edge - 15 to 18; 79 to 105
-- Firefox - 44 to 104
-- Brave <= 1.43
+- Chrome/Chromium - 50 to 109
+- Edge - 15 to 18; 79 to 109
+- Firefox - 44 to 109
+- Brave <= 1.47
 - MSIE == 11 (Promise polyfill required)
 
 Please note that although this script works on almost all modern browsers, detecting private modes in browsers is very much an arms race. As such, I cannot guarantee that this script will continue to work into the future. However, I will continue to actively maintain this script to support as many browsers as is possible.
