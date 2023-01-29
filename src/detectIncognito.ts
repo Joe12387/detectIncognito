@@ -152,8 +152,11 @@
     // >= 76
     function storageQuotaChromePrivateTest(): void {
       (navigator as any).webkitTemporaryStorage.queryUsageAndQuota(
-        function (usage: any, quota: any) {
-          __callback(quota < getQuotaLimit());
+        function (_: number, quota: number) {
+          const quotaInMib = Math.round(quota / (1024 * 1024));
+          const quotaLimitInMib = Math.round(getQuotaLimit() / (1024 * 1024)) * 2;
+
+          __callback(quotaInMib < quotaLimitInMib);
         },
         function (e: any) {
           reject(
