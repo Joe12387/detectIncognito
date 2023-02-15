@@ -1,6 +1,6 @@
 Note: The npm package is now [detectincognitojs](https://www.npmjs.com/package/detectincognitojs "detectincognitojs").
 
-![Incognito icon](./detectIncognito.svg)
+![Incognito icon](./detectIncognito.svg | width=120 )
 
 # detectIncognito.js
 
@@ -75,4 +75,5 @@ If you are aware of any modern browsers this script does not work with, please l
 ## License
 
 Copyright (c) 2023 Joe Rutkowski
+
 Released under [MIT License](https://opensource.org/license/mit-0/)
