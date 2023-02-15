@@ -1,6 +1,6 @@
 Note: The npm package is now [detectincognitojs](https://www.npmjs.com/package/detectincognitojs "detectincognitojs").
 
-![Incognito icon](./detectIncognito.svg | width=120 )
+<img src="./detectIncognito.svg"  width="150"  />
 
 # detectIncognito.js
 
