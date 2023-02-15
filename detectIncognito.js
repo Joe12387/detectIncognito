@@ -1,10 +1,9 @@
-"use strict";
 /**
  *
- * detectIncognito v1.2.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.2.1 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
-var detectIncognito = function () {
+export var detectIncognito = function () {
     return new Promise(function (resolve, reject) {
         var browserName = "Unknown";
         function __callback(isPrivate) {
