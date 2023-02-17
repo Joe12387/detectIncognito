@@ -3,7 +3,7 @@
  * detectIncognito v1.2.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
- const detectIncognito = function (): Promise<{
+export const detectIncognito = function (): Promise<{
   isPrivate: boolean;
   browserName: string;
 }> {
