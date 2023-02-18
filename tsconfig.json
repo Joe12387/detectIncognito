@@ -1,21 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "ESNext",
     "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
+    "lib": [
+      "es2016",
+      "dom"
+    ],
     "outDir": "./dist",
-    "removeComments": false,
+    "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": false,
-    "lib": [
-      "es2016",
-      "dom"
-    ]
+    "removeComments": false
   }
 }

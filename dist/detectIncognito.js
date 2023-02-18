@@ -1,7 +1,9 @@
 "use strict";
+exports.__esModule = true;
+exports.detectIncognito = void 0;
 /**
  *
- * detectIncognito v1.2.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
+ * detectIncognito v1.3.0 - (c) 2022 Joe Rutkowski <Joe@dreggle.com> (https://github.com/Joe12387/detectIncognito)
  *
  **/
 var detectIncognito = function () {
@@ -10,7 +12,7 @@ var detectIncognito = function () {
         function __callback(isPrivate) {
             resolve({
                 isPrivate: isPrivate,
-                browserName: browserName,
+                browserName: browserName
             });
         }
         function identifyChromium() {
@@ -62,7 +64,7 @@ var detectIncognito = function () {
                     var res = (_a = i.target) === null || _a === void 0 ? void 0 : _a.result;
                     try {
                         res.createObjectStore("test", {
-                            autoIncrement: true,
+                            autoIncrement: true
                         }).put(new Blob);
                         __callback(false);
                     }
@@ -191,4 +193,4 @@ var detectIncognito = function () {
         main();
     });
 };
-//# sourceMappingURL=detectIncognito.js.map
+exports.detectIncognito = detectIncognito;

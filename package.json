@@ -1,12 +1,13 @@
 {
   "name": "detectincognitojs",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of September 2022.",
-  "main": "dist/detectIncognito.js",
-  "types": "dist",
-  "typings": "dist/detectIncognito.d.ts",
+  "main": "./dist/detectIncognito.js",
+  "types": "./dist/detectIncognito.d.ts",
   "scripts": {
-    "build": "tsc -p . && npx uglify-js ./dist/detectIncognito.js -o ./dist/detectIncognito.min.js && cp ./dist/{detectIncognito.js,detectIncognito.min.js} ."
+    "build-for-cdn": "npx webpack",
+    "build-module": "tsc",
+    "build": "npm run build-for-cdn && npm run build-module"
   },
   "files": [
     "dist",
@@ -22,8 +23,9 @@
   "author": "Joe12387",
   "license": "MIT",
   "devDependencies": {
+    "ts-loader": "^9.4.2",
     "typescript": "^4.6.4",
-    "uglify-js": "^3.17.1"
-  },
-  "dependencies": {}
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  }
 }
