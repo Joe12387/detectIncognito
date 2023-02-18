@@ -7,7 +7,7 @@ module.exports = {
     extensions: ['.ts'],
   },
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/dist/es5',
     filename: 'detectIncognito.min.js',
     chunkFormat: 'array-push',
     library: {
