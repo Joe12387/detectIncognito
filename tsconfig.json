@@ -4,6 +4,14 @@
     "lib": [
       "es2016",
       "dom"
-    ]
+    ],
+    "outDir": "./dist",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "removeComments": false
   }
 }
