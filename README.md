@@ -24,7 +24,7 @@ https://detectincognito.com/
 Get script from CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@v1.3.0/dist/detectIncognito.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@v1.3.0/dist/es5/detectIncognito.min.js"></script>
 ```
 
 Or install from NPM
