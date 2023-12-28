@@ -4,7 +4,7 @@ Note: The npm package is now [detectincognitojs](https://www.npmjs.com/package/d
 
 # detectIncognito.js
 
-detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2023.
+detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2024.
 
 - Detects Incognito mode on Google Chrome
 - Detects Private Windows on Safari for macOS
@@ -12,7 +12,7 @@ detectIncognito.js can be used to detect incognito mode & other private browsing
 - Detects Private Windows in Firefox
 - Detects InPrivate Windows on Microsoft Edge
 - Detects InPrivate Windows on Microsoft Internet Explorer
-- Detects Private Windows in Brave
+- Detects Private Windows in Brave (see notes)
 - Detects Private Windows in Opera
 
 ## Demo
@@ -67,6 +67,7 @@ If you are aware of any modern browsers this script does not work with, please l
 - This script does not detect Container Tabs on Firefox as they work differently compared to private mode.
 - An error will be thrown if the browser cannot be identified.
 - The script only works remotely on a web server using HTTPS. Running the script locally or with HTTP may produce a false result, or it may not run at all.
+- Brave and uBlock Origin currently block the script from loading from the CDN. Hosting the script elsewhere should bypass this.
 
 ## Similar Projects
 
@@ -74,6 +75,6 @@ If you are aware of any modern browsers this script does not work with, please l
 
 ## License
 
-Copyright (c) 2023 Joe Rutkowski
+Copyright (c) 2024 Joe Rutkowski
 
 Released under [MIT License](https://opensource.org/license/mit-0/)
