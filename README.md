@@ -47,15 +47,15 @@ detectIncognito().then((result) => {
 
 ## Supported Browsers
 
-| Browser         | Platform(s) |      Versions       | Notes                     |
-| --------------- | :---------- | :-----------------: | :------------------------ |
-| Safari          | iOS         |       8 to 16       |                           |
-| Safari          | macOS       |        ≤ 16         |                           |
-| Chrome/Chromium | All         |      50 to 109      |                           |
-| Edge            | All         | 15 to 18; 79 to 109 |                           |
-| Firefox         | All         |      44 to 109      |                           |
-| Brave           | All         |       ≤ 1.47        |                           |
-| MSIE            | All         |         11          | Promise polyfill required |
+| Browser         | Platform(s) |      Versions       | Notes                            |
+| --------------- | :---------- | :-----------------: | :------------------------------- |
+| Safari          | iOS         |       8 to 17.3     |                                  |
+| Safari          | macOS       |        ≤ 17.3       |                                  |
+| Chrome/Chromium | All         |      50 to 121      |                                  |
+| Edge            | All         | 15 to 18; 79 to 121 |                                  |
+| Firefox         | All         |      44 to 122      |                                  |
+| Brave           | All         |       ≤ 1.62        | CDN is blocked if shields are up |
+| MSIE            | All         |         11          | Promise polyfill required        |
 
 Please note that although this script works on almost all modern browsers, detecting private modes in browsers is very much an arms race. As such, I cannot guarantee that this script will continue to work into the future. However, I will continue to actively maintain this script to support as many browsers as is possible.
 
