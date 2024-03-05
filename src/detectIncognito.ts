@@ -29,10 +29,15 @@
  * Please keep this comment intact in order to properly abide by the MIT License.
  *
  **/
-export const detectIncognito = async function (): Promise<{
-  isPrivate: boolean
-  browserName: string
-}> {
+declare var define: any;
+
+declare global {
+  interface Window {
+    detectIncognito: typeof detectIncognito;
+  }
+}
+
+async function detectIncognito(): Promise<{ isPrivate: boolean; browserName: string }>{
   return await new Promise(function (resolve, reject) {
     let browserName = 'Unknown'
 
@@ -252,3 +257,19 @@ export const detectIncognito = async function (): Promise<{
     main()
   })
 }
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = detectIncognito;
+}
+
+if (typeof define === 'function' && define.amd) {
+  define(function() {
+    return detectIncognito;
+  });
+}
+
+if (typeof window !== 'undefined') {
+  window.detectIncognito = detectIncognito;
+}
+
+export default detectIncognito;
