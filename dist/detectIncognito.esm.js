@@ -1,4 +1,4 @@
-/**
+/*!
  *
  * detectIncognito v1.3.1
  *

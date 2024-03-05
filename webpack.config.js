@@ -27,7 +27,7 @@ const commonConfig = {
   },
   plugins: [
     new webpack.BannerPlugin({
-      banner: `/**
+      banner: `/*!
  *
  * detectIncognito v${package.version}
  *
