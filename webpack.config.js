@@ -86,6 +86,7 @@ const umdConfig = {
       type: 'umd',
     },
     globalObject: 'this',
+    libraryExport: 'default',
   },
   target: ['web', 'es5'],
 };
