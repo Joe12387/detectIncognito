@@ -18,13 +18,13 @@
       margin-left: -200px;
     }
   </style>
-  <meta name="description" content="The only working Javascript library to detect incognito mode & other private browsing modes as of 2022."/>
+  <meta name="description" content="The only working Javascript library to detect incognito mode & other private browsing modes as of 2024."/>
 </head>
 
 <body onload="detect()">
   <div class="wrapper">
     <h2>Is this a Private Browsing window?</h2>
-    <div id="answer"><br/></div>
+    <div id="answer"><br/><noscript>detectIncognito requires JavaScript in order to function, please enable it.</noscript></div>
     <br/>
     <div>
       <p>Powered by <a href="https://github.com/Joe12387/detectIncognito">detectIncognito.js</a>.</p>
@@ -40,11 +40,6 @@
         case "Opera":
           return "a Private Window";
           break;
-/*
-        case "Safari for iOS":
-          return "a Private Tab";
-          break;
-*/
         case "Chrome":
         case "Chromium":
           return "an Incognito Window";

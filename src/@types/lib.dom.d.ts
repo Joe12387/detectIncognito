@@ -1,3 +1,3 @@
 interface IDBVersionChangeEvent {
-  target: IDBRequest;
+  target: IDBRequest
 }
