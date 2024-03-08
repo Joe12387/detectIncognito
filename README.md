@@ -21,10 +21,10 @@ https://detectincognito.com/
 
 ## Usage
 
-Get script from CDN
+Get script from CDN (may be blocked by adblockers, see notes)
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@v1.3.0/dist/es5/detectIncognito.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@main/dist/es5/detectIncognito.min.js"></script>
 ```
 
 Or install from NPM
@@ -49,10 +49,10 @@ detectIncognito().then((result) => {
 
 | Browser         | Platform(s) |      Versions       | Notes                            |
 | --------------- | :---------- | :-----------------: | :------------------------------- |
-| Safari          | iOS         |  8 to 17.4 Beta 4   |                                  |
-| Safari          | macOS       | ≤ 17.4 Preview 189  |                                  |
+| Safari          | iOS         |      8 to 17.4      |                                  |
+| Safari          | macOS       |       ≤ 17.4        |                                  |
 | Chrome/Chromium | All         |   50 to 123 Beta    |                                  |
-| Edge            | All         | 15 to 18; 79 to 121 |                                  |
+| Edge            | All         | 15 to 18; 79 to 122 |                                  |
 | Firefox         | All         |      44 to 123      |                                  |
 | Brave           | All         |       ≤ 1.63        | CDN is blocked if shields are up |
 | MSIE            | Windows     |         11          | Promise polyfill required        |
