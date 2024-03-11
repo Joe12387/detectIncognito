@@ -1,6 +1,6 @@
 /*!
  *
- * detectIncognito v1.3.1
+ * detectIncognito v1.3.2
  *
  * https://github.com/Joe12387/detectIncognito
  *
@@ -37,7 +37,7 @@ declare global {
   }
 }
 
-async function detectIncognito(): Promise<{ isPrivate: boolean; browserName: string }>{
+export async function detectIncognito(): Promise<{ isPrivate: boolean; browserName: string }>{
   return await new Promise(function (resolve, reject) {
     let browserName = 'Unknown'
 
