@@ -29,8 +29,6 @@
  * Please keep this comment intact in order to properly abide by the MIT License.
  *
  **/
-declare var define: any;
-
 declare global {
   interface Window {
     detectIncognito: typeof detectIncognito;
@@ -256,20 +254,6 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
 
     main()
   })
-}
-
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = detectIncognito;
-}
-
-if (typeof define === 'function' && define.amd) {
-  define(function() {
-    return detectIncognito;
-  });
-}
-
-if (typeof window !== 'undefined') {
-  window.detectIncognito = detectIncognito;
 }
 
 export default detectIncognito;
