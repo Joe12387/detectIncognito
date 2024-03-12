@@ -1,6 +1,6 @@
 {
   "name": "detectincognitojs",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "detectIncognito.js can be used to detect incognito mode & other private browsing modes on most modern browsers as of 2024.",
   "main": "./dist/detectIncognito.js",
   "module": "./dist/detectIncognito.esm.js",

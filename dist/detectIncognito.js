@@ -236,15 +236,4 @@ function detectIncognito() {
     });
 }
 exports.detectIncognito = detectIncognito;
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = detectIncognito;
-}
-if (typeof define === 'function' && define.amd) {
-    define(function () {
-        return detectIncognito;
-    });
-}
-if (typeof window !== 'undefined') {
-    window.detectIncognito = detectIncognito;
-}
 exports["default"] = detectIncognito;
