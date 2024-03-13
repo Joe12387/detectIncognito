@@ -236,4 +236,7 @@ function detectIncognito() {
     });
 }
 exports.detectIncognito = detectIncognito;
+if (typeof window !== 'undefined') {
+    window.detectIncognito = detectIncognito;
+}
 exports["default"] = detectIncognito;

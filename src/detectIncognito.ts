@@ -1,6 +1,6 @@
 /*!
  *
- * detectIncognito v1.3.4
+ * detectIncognito v1.3.5
  *
  * https://github.com/Joe12387/detectIncognito
  *
@@ -254,6 +254,10 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
 
     main()
   })
+}
+
+if (typeof window !== 'undefined') {
+  window.detectIncognito = detectIncognito;
 }
 
 export default detectIncognito;
