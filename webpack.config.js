@@ -5,7 +5,7 @@ const package = require('./package.json');
 
 const currentYear = new Date().getFullYear();
 
-const commonConfig = {
+const commonConfig = (isEsm) => ({
   entry: './src/detectIncognito.ts',
   mode: 'production',
   resolve: {
@@ -19,6 +19,9 @@ const commonConfig = {
           loader: 'ts-loader',
           options: {
             transpileOnly: true,
+            compilerOptions: isEsm ? {
+              module: "es2015",
+            } : undefined
           },
         },
         exclude: /node_modules/,
@@ -74,10 +77,10 @@ const commonConfig = {
       }),
     ],
   },
-};
+});
 
 const umdConfig = {
-  ...commonConfig,
+  ...commonConfig(false),
   output: {
     path: path.resolve(__dirname, 'dist/es5'),
     filename: 'detectIncognito.min.js',
@@ -92,7 +95,7 @@ const umdConfig = {
 };
 
 const esmConfig = {
-  ...commonConfig,
+  ...commonConfig(true),
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'detectIncognito.esm.js',
