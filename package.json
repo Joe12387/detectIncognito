@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Joe12387/detectIncognito.git"
+    "url": "git+https://github.com/Joe12387/detectIncognito.git"
   },
   "keywords": [
     "incognito"

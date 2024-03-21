@@ -1,6 +1,34 @@
 <!doctype html>
 <html>
 
+<!--
+  detectIncognito.js - JavaScript Private Browsing Detection
+ 
+  https://github.com/Joe12387/detectIncognito
+ 
+  MIT License
+ 
+  Copyright (c) 2021 - 2024 Joe Rutkowski <Joe@dreggle.com>
+ 
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+ 
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+ 
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+
 <head>
   <title>detectIncognito - JavaScript Private Browsing Detection</title>
   <style>
@@ -21,10 +49,10 @@
   <meta name="description" content="The only working Javascript library to detect incognito mode & other private browsing modes as of 2024."/>
 </head>
 
-<body onload="detect()">
+<body>
   <div class="wrapper">
     <h2>Is this a Private Browsing window?</h2>
-    <div id="answer"><br/><noscript>detectIncognito requires JavaScript in order to function, please enable it.</noscript></div>
+    <div id="answer"><noscript><b>detectIncognito requires JavaScript in order to function</b>, please enable it.</noscript><br/></div>
     <br/>
     <div>
       <p>Powered by <a href="https://github.com/Joe12387/detectIncognito">detectIncognito.js</a>.</p>
@@ -52,21 +80,45 @@
       throw new Error("Could not get mode name");
     }
     
+    // This function is called when the script is loaded
     function detect() {
       var a = document.getElementById("answer");
+      // We call the detectIncognito function and handle the promise
       detectIncognito().then(function(result) {
-        if (result.isPrivate) {
+        if (result.isPrivate) { // If the result is private, we display a message to the user
           a.innerHTML = "<b>Yes</b>. You are using " + result.browserName + " in " + getModeName(result.browserName) + ".";
-        } else {
+        } else { // If the result is not private, we display a message to the user
           a.innerHTML = "<b>No</b>. You are using " + result.browserName + " in a regular browser window.";
         }
-      }).catch(function(error) {
-        a.innerHTML = "There was an error. Check console for further information.";
-        console.log(error);
+      }).catch(function(error) { // If there is an error, we display a message to the user & log the error to console
+        a.innerHTML = "<b>There was an error.</b> Check console for further information. If the problem persists, please <a href='https://github.com/Joe12387/detectIncognito/issues'>report the issue</a> on GitHub.";
+        console.error(error);
       });
     }
+
+    // To handle the CDN being blocked by adblockers, we load the script using createElement
+    var script = document.createElement('script');
+
+    // We then set the onload and onerror events to detect whether the script was loaded successfully
+    script.onload = detect;
+
+    // If the script fails to load, we display a message to the user
+    script.onerror = function () {
+      var a = document.getElementById("answer");
+      a.innerHTML = "<b>The script failed to load from the CDN.</b> ";
+      if (navigator.brave !== undefined) {
+        a.innerHTML += "If you are using Brave, please turn off shields by clicking the Brave icon to the right of the location bar and try again.";
+      } else {
+        a.innerHTML += "If you are using an adblocker, please disable it and try again.";
+      }
+      a.innerHTML += " If the problem persists, please <a href='https://github.com/Joe12387/detectIncognito/issues'>report the issue</a> on GitHub.";
+    };
+
+    script.src = 'https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@main/dist/es5/detectIncognito.min.js';
+    document.body.appendChild(script);
   </script>
-  <script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@main/dist/es5/detectIncognito.min.js"></script>
+  <!-- To load the script without inline JS and without error handling to account for adblockers, do this: -->
+  <!-- <script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@main/dist/es5/detectIncognito.min.js"></script> -->
 </body>
 
 </html>
