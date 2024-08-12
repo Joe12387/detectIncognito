@@ -71,8 +71,8 @@ If you are aware of any modern browsers this script does not work with, please l
 
 ## Similar Projects
 
-- [Overpowered Browser Fingerprinting Script](https://github.com/Joe12387/OP-Fingerprinting-Script "Overpowered Browser Fingerprinting Script")
-- [Browser Fingerprinting Resistance Research](https://github.com/Joe12387/browser-fingerprinting-resistance-research "Browser Fingerprinting Resistance Research")
+- [OverpoweredJS](https://github.com/Joe12387/overpoweredjs "OverpoweredJS") - An overpowered browser fingerprinting solution.
+- [Browser Fingerprinting Resistance Research](https://github.com/Joe12387/browser-fingerprinting-resistance-research "Browser Fingerprinting Resistance Research") - Research of browser fingerprinting methods.
 
 ## License
 
