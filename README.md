@@ -49,11 +49,11 @@ detectIncognito().then((result) => {
 
 | Browser         | Platform(s) |      Versions       | Notes                            |
 | --------------- | :---------- | :-----------------: | :------------------------------- |
-| Safari          | iOS         | 8 to 18 Beta 4      |                                  |
-| Safari          | macOS       | ≤ 17.5              |                                  |
+| Safari          | iOS         | 8 to 18.1 Beta 2    |                                  |
+| Safari          | macOS       | ≤ 18.0 Beta 4       |                                  |
 | Chrome/Chromium | All         | 50 to 128 Beta      |                                  |
-| Edge            | All         | 15 to 18; 79 to 126 |                                  |
-| Firefox         | All         | 44 to 128           |                                  |
+| Edge            | All         | 15 to 18; 79 to 127 |                                  |
+| Firefox         | All         | 44 to 129           |                                  |
 | Brave           | All         | ≤ 1.68              | CDN is blocked if shields are up |
 | MSIE            | Windows     | 11                  | Promise polyfill required        |
 
