@@ -1,4 +1,4 @@
-Note: The npm package is now [detectincognitojs](https://www.npmjs.com/package/detectincognitojs "detectincognitojs").
+[Looking for a free browser fingerprinting & bot detection solution?](https://github.com/Joe12387/overpoweredjs-api)
 
 <img src="./detectIncognito.svg"  width="150"  />
 
@@ -50,11 +50,11 @@ detectIncognito().then((result) => {
 | Browser         | Platform(s) |      Versions       | Notes                            |
 | --------------- | :---------- | :-----------------: | :------------------------------- |
 | Safari          | iOS         | 8 to 18.1 Beta 2    |                                  |
-| Safari          | macOS       | ≤ 18.0 Beta 4       |                                  |
-| Chrome/Chromium | All         | 50 to 128 Beta      |                                  |
+| Safari          | macOS       | ≤ 18.0              |                                  |
+| Chrome/Chromium | All         | 50 to 129 Beta      |                                  |
 | Edge            | All         | 15 to 18; 79 to 127 |                                  |
 | Firefox         | All         | 44 to 129           |                                  |
-| Brave           | All         | ≤ 1.68              | CDN is blocked if shields are up |
+| Brave           | All         | ≤ 1.69              | CDN is blocked if shields are up |
 | MSIE            | Windows     | 11                  | Promise polyfill required        |
 
 Please note that although this script works on almost all modern browsers, detecting private modes in browsers is very much an arms race. As such, I cannot guarantee that this script will continue to work into the future. However, I will continue to actively maintain this script to support as many browsers as is possible.
@@ -71,7 +71,8 @@ If you are aware of any modern browsers this script does not work with, please l
 
 ## Similar Projects
 
-- [OverpoweredJS](https://github.com/Joe12387/overpoweredjs "OverpoweredJS") - An overpowered browser fingerprinting solution.
+- [OverpoweredJS](https://github.com/Joe12387/overpoweredjs "OverpoweredJS") - An overpowered browser fingerprinting library.
+- [OverpoweredJS API](https://github.com/Joe12387/overpoweredjs-api) - A free, overpowered browser fingerprinting & bot detection API based on OverpoweredJS.
 - [Browser Fingerprinting Resistance Research](https://github.com/Joe12387/browser-fingerprinting-resistance-research "Browser Fingerprinting Resistance Research") - Research of browser fingerprinting methods.
 
 ## License
