@@ -1,4 +1,4 @@
-[Looking for a free browser fingerprinting & bot detection solution?](https://github.com/Joe12387/overpoweredjs-api)
+[Looking for a free browser fingerprinting & bot detection solution?](https://overpoweredjs.com/)
 
 <img src="./detectIncognito.svg"  width="150"  />
 
