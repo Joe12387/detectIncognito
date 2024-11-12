@@ -1,6 +1,6 @@
 /*!
  *
- * detectIncognito v1.3.5
+ * detectIncognito v1.3.6
  *
  * https://github.com/Joe12387/detectIncognito
  *
@@ -66,26 +66,26 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
       return value === eval.toString().length
     }
 
+    function feid (): number {
+      let toFixedEngineID = 0
+      try {
+        (-1).toFixed(-1)
+      } catch (e) {
+        toFixedEngineID = (e as Error).message.length // Safari 44, Chrome 51, Firefox 25
+      }
+      return toFixedEngineID
+    }
+    
     function isSafari (): boolean {
-      const v = navigator.vendor
-      return (
-        v !== undefined && v.indexOf('Apple') === 0 && assertEvalToString(37)
-      )
+      return feid() === 44
     }
 
     function isChrome (): boolean {
-      const v = navigator.vendor
-      return (
-        v !== undefined && v.indexOf('Google') === 0 && assertEvalToString(33)
-      )
+      return feid() === 51
     }
 
     function isFirefox (): boolean {
-      return (
-        document.documentElement !== undefined &&
-        (document as any).documentElement.style.MozAppearance !== undefined &&
-        assertEvalToString(37)
-      )
+      return feid() === 25
     }
 
     function isMSIE (): boolean {

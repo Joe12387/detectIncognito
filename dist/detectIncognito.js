@@ -70,18 +70,24 @@ function detectIncognito() {
                         function assertEvalToString(value) {
                             return value === eval.toString().length;
                         }
+                        function feid() {
+                            var toFixedEngineID = 0;
+                            try {
+                                (-1).toFixed(-1);
+                            }
+                            catch (e) {
+                                toFixedEngineID = e.message.length; // Safari 44, Chrome 51, Firefox 25
+                            }
+                            return toFixedEngineID;
+                        }
                         function isSafari() {
-                            var v = navigator.vendor;
-                            return (v !== undefined && v.indexOf('Apple') === 0 && assertEvalToString(37));
+                            return feid() === 44;
                         }
                         function isChrome() {
-                            var v = navigator.vendor;
-                            return (v !== undefined && v.indexOf('Google') === 0 && assertEvalToString(33));
+                            return feid() === 51;
                         }
                         function isFirefox() {
-                            return (document.documentElement !== undefined &&
-                                document.documentElement.style.MozAppearance !== undefined &&
-                                assertEvalToString(37));
+                            return feid() === 25;
                         }
                         function isMSIE() {
                             return (navigator.msSaveBlob !== undefined && assertEvalToString(39));
