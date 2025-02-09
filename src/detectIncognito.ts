@@ -68,14 +68,15 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
 
     function feid (): number {
       let toFixedEngineID = 0
+      let neg = parseInt("-1")
       try {
-        eval(`(-1).toFixed(-1);`);
+         neg.toFixed(neg)
       } catch (e) {
-        toFixedEngineID = (e as Error).message.length // Safari 44, Chrome 51, Firefox 25
+        toFixedEngineID = (e as Error).message.length 
       }
       return toFixedEngineID
     }
-    
+
     function isSafari (): boolean {
       return feid() === 44
     }

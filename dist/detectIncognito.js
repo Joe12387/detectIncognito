@@ -72,11 +72,12 @@ function detectIncognito() {
                         }
                         function feid() {
                             var toFixedEngineID = 0;
+                            var neg = parseInt("-1");
                             try {
-                                eval("(-1).toFixed(-1);");
+                                neg.toFixed(neg);
                             }
                             catch (e) {
-                                toFixedEngineID = e.message.length; // Safari 44, Chrome 51, Firefox 25
+                                toFixedEngineID = e.message.length;
                             }
                             return toFixedEngineID;
                         }
