@@ -99,6 +99,29 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
      * Safari (Safari for iOS & macOS)
      **/
 
+    function newSafariTestByStorageFallback (): void {
+      if (!navigator.storage?.estimate) {
+        __callback(false);
+        return;
+      }
+
+      navigator.storage
+        .estimate()
+        .then(({ usage, quota }) => {
+          // iOS 18.x/macOS Safari 18.x (normal): ~41GB
+          // iOS 18.x/macOS Safari 18.x (private): ~1GB
+          // If reported quota < 2 GB => likely private
+          if (quota && quota < 2_000_000_000) {
+            __callback(true);
+          } else {
+            __callback(false);
+          }
+        })
+        .catch(() => {
+          __callback(false);
+        });
+    }
+
     function newSafariTest (): void {
       const tmp_name = String(Math.random())
 
@@ -112,8 +135,6 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
             res.createObjectStore('test', {
               autoIncrement: true
             }).put(new Blob())
-
-            __callback(false)
           } catch (e) {
             let message = e
 
@@ -126,11 +147,15 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
             }
 
             const matchesExpectedError = message.includes('BlobURLs are not yet supported')
-
-            __callback(matchesExpectedError); return
+            if (matchesExpectedError) {
+              __callback(true)
+            }
           } finally {
             res.close()
             window.indexedDB.deleteDatabase(tmp_name)
+
+            // indexdb works on newer versions of safari so we need to check via storage fallback
+            newSafariTestByStorageFallback();
           }
         }
       } catch (e) {

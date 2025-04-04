@@ -96,6 +96,29 @@ function detectIncognito() {
                         /**
                          * Safari (Safari for iOS & macOS)
                          **/
+                        function newSafariTestByStorageFallback() {
+                            var _a;
+                            if (!((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.estimate)) {
+                                __callback(false);
+                                return;
+                            }
+                            navigator.storage
+                                .estimate()
+                                .then(function (_a) {
+                                var usage = _a.usage, quota = _a.quota;
+                                // iOS 18.x/macOS Safari 18.x (normal): ~41GB
+                                // iOS 18.x/macOS Safari 18.x (private): ~1GB
+                                // If reported quota < 2 GB => likely private
+                                if (quota && quota < 2000000000) {
+                                    __callback(true);
+                                }
+                                else {
+                                    __callback(false);
+                                }
+                            })["catch"](function () {
+                                __callback(false);
+                            });
+                        }
                         function newSafariTest() {
                             var tmp_name = String(Math.random());
                             try {
@@ -107,7 +130,6 @@ function detectIncognito() {
                                         res.createObjectStore('test', {
                                             autoIncrement: true
                                         }).put(new Blob());
-                                        __callback(false);
                                     }
                                     catch (e) {
                                         var message = e;
@@ -119,12 +141,15 @@ function detectIncognito() {
                                             return;
                                         }
                                         var matchesExpectedError = message.includes('BlobURLs are not yet supported');
-                                        __callback(matchesExpectedError);
-                                        return;
+                                        if (matchesExpectedError) {
+                                            __callback(true);
+                                        }
                                     }
                                     finally {
                                         res.close();
                                         window.indexedDB.deleteDatabase(tmp_name);
+                                        // indexdb works on newer versions of safari so we need to check via storage fallback
+                                        newSafariTestByStorageFallback();
                                     }
                                 };
                             }
