@@ -51,7 +51,7 @@ detectIncognito().then((result) => {
 | --------------- | :---------- | :-----------------: | :------------------------------- |
 | Safari          | iOS         | 8 to 18.4           |                                  |
 | Safari          | macOS       | ≤ 18.4              |                                  |
-| Chrome/Chromium | All         | 50 to 137 Beta      | `predictable-reported-quota` flag currently breaks detection (see #49) |
+| Chrome/Chromium | All         | 50 to 137 Beta      | `predictable-reported-quota` flag currently breaks detection (see ([Issue #49](https://github.com/Joe12387/detectIncognito/issues/49))) |
 | Edge            | All         | 15 to 18; 79 to 136 |                                  |
 | Firefox         | All         | 44 to 138           |                                  |
 | Brave           | All         | ≤ 1.76              | CDN is blocked if shields are up |
