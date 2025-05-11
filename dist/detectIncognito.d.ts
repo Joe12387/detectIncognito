@@ -1,12 +1,12 @@
 /*!
  *
- * detectIncognito v1.4.1
+ * detectIncognito v1.5.0
  *
  * https://github.com/Joe12387/detectIncognito
  *
  * MIT License
  *
- * Copyright (c) 2021 - 2024 Joe Rutkowski <Joe@dreggle.com>
+ * Copyright (c) 2021 - 2025 Joe Rutkowski <Joe@dreggle.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

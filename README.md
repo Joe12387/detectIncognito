@@ -1,4 +1,4 @@
-Shameless plug: [Looking for a user tracking or bot detection solution?](https://overpoweredjs.com/demo.html)
+Shameless plug: [Looking for a user tracking or bot detection solution?](https://overpoweredjs.com/)
 
 <img src="./detectIncognito.svg"  width="150"  />
 
@@ -51,9 +51,9 @@ detectIncognito().then((result) => {
 | --------------- | :---------- | :-----------------: | :------------------------------- |
 | Safari          | iOS         | 8 to 18.4           |                                  |
 | Safari          | macOS       | ≤ 18.4              |                                  |
-| Chrome/Chromium | All         | 50 to 135 Beta      |                                  |
-| Edge            | All         | 15 to 18; 79 to 134 |                                  |
-| Firefox         | All         | 44 to 137           |                                  |
+| Chrome/Chromium | All         | 50 to 137 Beta      | `predictable-reported-quota` flag currently breaks detection (see #49) |
+| Edge            | All         | 15 to 18; 79 to 136 |                                  |
+| Firefox         | All         | 44 to 138           |                                  |
 | Brave           | All         | ≤ 1.76              | CDN is blocked if shields are up |
 | MSIE            | Windows     | 11                  | Promise polyfill required        |
 
@@ -71,8 +71,7 @@ If you are aware of any modern browsers this script does not work with, please l
 
 ## Similar Projects
 
-- [OverpoweredJS](https://overpoweredjs.com/demo.html "OverpoweredJS") - An overpowered browser fingerprinting solution.
-- [Browser Fingerprinting Resistance Research](https://github.com/Joe12387/browser-fingerprinting-resistance-research "Browser Fingerprinting Resistance Research") - Research of browser fingerprinting methods.
+- [OverpoweredJS](https://overpoweredjs.com/ "OverpoweredJS") - An overpowered browser fingerprinting & bot detection solution.
 
 ## License
 

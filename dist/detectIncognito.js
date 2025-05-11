@@ -43,7 +43,12 @@ function detectIncognito() {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
                         var browserName = 'Unknown';
+                        var callbackSettled = false;
                         function __callback(isPrivate) {
+                            if (callbackSettled) {
+                                return;
+                            }
+                            callbackSettled = true;
                             resolve({
                                 isPrivate: isPrivate,
                                 browserName: browserName
@@ -68,7 +73,12 @@ function detectIncognito() {
                             }
                         }
                         function assertEvalToString(value) {
-                            return value === eval.toString().length;
+                            try {
+                                return value === eval.toString().length;
+                            }
+                            catch (e) {
+                                return false;
+                            }
                         }
                         function feid() {
                             var toFixedEngineID = 0;
@@ -96,64 +106,68 @@ function detectIncognito() {
                         /**
                          * Safari (Safari for iOS & macOS)
                          **/
-                        function newSafariTestByStorageFallback() {
+                        function currentSafariTest() {
                             var _a;
-                            if (!((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.estimate)) {
-                                __callback(false);
-                                return;
-                            }
-                            navigator.storage
-                                .estimate()
-                                .then(function (_a) {
-                                var usage = _a.usage, quota = _a.quota;
-                                // iOS 18.x/macOS Safari 18.x (normal): ~41GB
-                                // iOS 18.x/macOS Safari 18.x (private): ~1GB
-                                // If reported quota < 2 GB => likely private
-                                if (quota && quota < 2000000000) {
-                                    __callback(true);
-                                }
-                                else {
-                                    __callback(false);
-                                }
-                            })["catch"](function () {
-                                __callback(false);
+                            return __awaiter(this, void 0, void 0, function () {
+                                var e_1, message, matchesExpectedError;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            _b.trys.push([0, 2, , 3]);
+                                            return [4 /*yield*/, navigator.storage.getDirectory()];
+                                        case 1:
+                                            _b.sent();
+                                            __callback(false);
+                                            return [3 /*break*/, 3];
+                                        case 2:
+                                            e_1 = _b.sent();
+                                            message = e_1;
+                                            if (e_1 instanceof Error) {
+                                                message = (_a = e_1.message) !== null && _a !== void 0 ? _a : e_1;
+                                            }
+                                            if (typeof message !== 'string') {
+                                                __callback(false);
+                                                return [2 /*return*/];
+                                            }
+                                            matchesExpectedError = message.includes('unknown transient reason');
+                                            if (matchesExpectedError) {
+                                                __callback(true);
+                                            }
+                                            else {
+                                                __callback(false);
+                                            }
+                                            return [3 /*break*/, 3];
+                                        case 3: return [2 /*return*/];
+                                    }
+                                });
                             });
                         }
-                        function newSafariTest() {
-                            var tmp_name = String(Math.random());
+                        function safari13to18Test() {
+                            var tmp = String(Math.random());
                             try {
-                                var db = window.indexedDB.open(tmp_name, 1);
-                                db.onupgradeneeded = function (i) {
-                                    var _a, _b;
-                                    var res = (_a = i.target) === null || _a === void 0 ? void 0 : _a.result;
+                                var dbReq = indexedDB.open(tmp, 1);
+                                dbReq.onupgradeneeded = function (ev) {
+                                    var db = ev.target.result;
+                                    var finish = function (priv) { __callback(priv); };
                                     try {
-                                        res.createObjectStore('test', {
-                                            autoIncrement: true
-                                        }).put(new Blob());
+                                        db.createObjectStore('t', { autoIncrement: true }).put(new Blob());
+                                        finish(false);
                                     }
-                                    catch (e) {
-                                        var message = e;
-                                        if (e instanceof Error) {
-                                            message = (_b = e.message) !== null && _b !== void 0 ? _b : e;
-                                        }
-                                        if (typeof message !== 'string') {
-                                            __callback(false);
-                                            return;
-                                        }
-                                        var matchesExpectedError = message.includes('BlobURLs are not yet supported');
-                                        if (matchesExpectedError) {
-                                            __callback(true);
-                                        }
+                                    catch (err) {
+                                        var msg = err.message || '';
+                                        if (msg.includes('are not yet supported'))
+                                            finish(true);
+                                        else
+                                            finish(false);
                                     }
                                     finally {
-                                        res.close();
-                                        window.indexedDB.deleteDatabase(tmp_name);
-                                        // indexdb works on newer versions of safari so we need to check via storage fallback
-                                        newSafariTestByStorageFallback();
+                                        db.close();
+                                        indexedDB.deleteDatabase(tmp);
                                     }
                                 };
+                                dbReq.onerror = function () { return __callback(false); };
                             }
-                            catch (e) {
+                            catch (_a) {
                                 __callback(false);
                             }
                         }
@@ -178,12 +192,28 @@ function detectIncognito() {
                             __callback(false);
                         }
                         function safariPrivateTest() {
-                            if (navigator.maxTouchPoints !== undefined) {
-                                newSafariTest();
-                            }
-                            else {
-                                oldSafariTest();
-                            }
+                            var _a;
+                            return __awaiter(this, void 0, void 0, function () {
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            if (!(((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.getDirectory) !== undefined)) return [3 /*break*/, 2];
+                                            return [4 /*yield*/, currentSafariTest()];
+                                        case 1:
+                                            _b.sent();
+                                            return [3 /*break*/, 3];
+                                        case 2:
+                                            if (navigator.maxTouchPoints !== undefined) {
+                                                safari13to18Test();
+                                            }
+                                            else {
+                                                oldSafariTest();
+                                            }
+                                            _b.label = 3;
+                                        case 3: return [2 /*return*/];
+                                    }
+                                });
+                            });
                         }
                         /**
                          * Chrome
@@ -240,27 +270,39 @@ function detectIncognito() {
                             __callback(window.indexedDB === undefined);
                         }
                         function main() {
-                            if (isSafari()) {
-                                browserName = 'Safari';
-                                safariPrivateTest();
-                            }
-                            else if (isChrome()) {
-                                browserName = identifyChromium();
-                                chromePrivateTest();
-                            }
-                            else if (isFirefox()) {
-                                browserName = 'Firefox';
-                                firefoxPrivateTest();
-                            }
-                            else if (isMSIE()) {
-                                browserName = 'Internet Explorer';
-                                msiePrivateTest();
-                            }
-                            else {
-                                reject(new Error('detectIncognito cannot determine the browser'));
-                            }
+                            return __awaiter(this, void 0, void 0, function () {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!isSafari()) return [3 /*break*/, 2];
+                                            browserName = 'Safari';
+                                            return [4 /*yield*/, safariPrivateTest()];
+                                        case 1:
+                                            _a.sent();
+                                            return [3 /*break*/, 3];
+                                        case 2:
+                                            if (isChrome()) {
+                                                browserName = identifyChromium();
+                                                chromePrivateTest();
+                                            }
+                                            else if (isFirefox()) {
+                                                browserName = 'Firefox';
+                                                firefoxPrivateTest();
+                                            }
+                                            else if (isMSIE()) {
+                                                browserName = 'Internet Explorer';
+                                                msiePrivateTest();
+                                            }
+                                            else {
+                                                reject(new Error('detectIncognito cannot determine the browser'));
+                                            }
+                                            _a.label = 3;
+                                        case 3: return [2 /*return*/];
+                                    }
+                                });
+                            });
                         }
-                        main();
+                        main()["catch"](reject);
                     })];
                 case 1: return [2 /*return*/, _a.sent()];
             }
