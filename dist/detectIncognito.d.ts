@@ -1,6 +1,6 @@
 /*!
  *
- * detectIncognito v1.5.0
+ * detectIncognito v1.6.0
  *
  * https://github.com/Joe12387/detectIncognito
  *

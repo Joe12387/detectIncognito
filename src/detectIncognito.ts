@@ -1,6 +1,6 @@
 /*!
  *
- * detectIncognito v1.5.0
+ * detectIncognito v1.6.0
  *
  * https://github.com/Joe12387/detectIncognito
  *
@@ -250,7 +250,21 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
      * Firefox
      **/
 
-    function firefoxPrivateTest(): void {
+    async function firefoxPrivateTest(): Promise<void> {
+      if (navigator.storage && navigator.storage.getDirectory) {
+        try {
+          await navigator.storage.getDirectory()
+          __callback(false)
+        } catch (e) {
+          let message = (e instanceof Error && typeof e.message === 'string') ? e.message : String(e)
+          if (typeof message !== 'string') {
+            __callback(false); return
+          }
+          const matchesExpectedError = message.includes('Security error')
+          __callback(matchesExpectedError)
+          return
+        }
+      }
       __callback(navigator.serviceWorker === undefined)
     }
 
@@ -271,7 +285,7 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
         chromePrivateTest()
       } else if (isFirefox()) {
         browserName = 'Firefox'
-        firefoxPrivateTest()
+        await firefoxPrivateTest()
       } else if (isMSIE()) {
         browserName = 'Internet Explorer'
         msiePrivateTest()

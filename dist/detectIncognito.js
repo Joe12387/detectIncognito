@@ -261,7 +261,36 @@ function detectIncognito() {
                          * Firefox
                          **/
                         function firefoxPrivateTest() {
-                            __callback(navigator.serviceWorker === undefined);
+                            return __awaiter(this, void 0, void 0, function () {
+                                var e_2, message, matchesExpectedError;
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
+                                        case 0:
+                                            if (!(navigator.storage && navigator.storage.getDirectory)) return [3 /*break*/, 4];
+                                            _a.label = 1;
+                                        case 1:
+                                            _a.trys.push([1, 3, , 4]);
+                                            return [4 /*yield*/, navigator.storage.getDirectory()];
+                                        case 2:
+                                            _a.sent();
+                                            __callback(false);
+                                            return [3 /*break*/, 4];
+                                        case 3:
+                                            e_2 = _a.sent();
+                                            message = (e_2 instanceof Error && typeof e_2.message === 'string') ? e_2.message : String(e_2);
+                                            if (typeof message !== 'string') {
+                                                __callback(false);
+                                                return [2 /*return*/];
+                                            }
+                                            matchesExpectedError = message.includes('Security error');
+                                            __callback(matchesExpectedError);
+                                            return [2 /*return*/];
+                                        case 4:
+                                            __callback(navigator.serviceWorker === undefined);
+                                            return [2 /*return*/];
+                                    }
+                                });
+                            });
                         }
                         /**
                          * MSIE
@@ -279,25 +308,29 @@ function detectIncognito() {
                                             return [4 /*yield*/, safariPrivateTest()];
                                         case 1:
                                             _a.sent();
-                                            return [3 /*break*/, 3];
+                                            return [3 /*break*/, 6];
                                         case 2:
-                                            if (isChrome()) {
-                                                browserName = identifyChromium();
-                                                chromePrivateTest();
-                                            }
-                                            else if (isFirefox()) {
-                                                browserName = 'Firefox';
-                                                firefoxPrivateTest();
-                                            }
-                                            else if (isMSIE()) {
+                                            if (!isChrome()) return [3 /*break*/, 3];
+                                            browserName = identifyChromium();
+                                            chromePrivateTest();
+                                            return [3 /*break*/, 6];
+                                        case 3:
+                                            if (!isFirefox()) return [3 /*break*/, 5];
+                                            browserName = 'Firefox';
+                                            return [4 /*yield*/, firefoxPrivateTest()];
+                                        case 4:
+                                            _a.sent();
+                                            return [3 /*break*/, 6];
+                                        case 5:
+                                            if (isMSIE()) {
                                                 browserName = 'Internet Explorer';
                                                 msiePrivateTest();
                                             }
                                             else {
                                                 reject(new Error('detectIncognito cannot determine the browser'));
                                             }
-                                            _a.label = 3;
-                                        case 3: return [2 /*return*/];
+                                            _a.label = 6;
+                                        case 6: return [2 /*return*/];
                                     }
                                 });
                             });
