@@ -67,14 +67,6 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
       }
     }
 
-    function assertEvalToString(value: number): boolean {
-      try {
-        return value === eval.toString().length
-      } catch (e) {
-        return false
-      }
-    }
-
     function feid(): number {
       let toFixedEngineID = 0
       let neg = parseInt("-1")
@@ -87,7 +79,7 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
     }
 
     function isSafari(): boolean {
-      return feid() === 44
+      return feid() === 44 || feid() === 43
     }
 
     function isChrome(): boolean {
@@ -99,9 +91,7 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
     }
 
     function isMSIE(): boolean {
-      return (
-        (navigator as any).msSaveBlob !== undefined && assertEvalToString(39)
-      )
+      return (navigator as any).msSaveBlob !== undefined
     }
 
     /**
@@ -113,23 +103,11 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
         await navigator.storage.getDirectory();
         __callback(false)
       } catch (e) {
-        let message = e
-
-        if (e instanceof Error) {
-          message = e.message ?? e
-        }
-
-        if (typeof message !== 'string') {
-          __callback(false); return
-        }
+        let message = (e instanceof Error && typeof e.message === 'string') ? e.message : String(e)
 
         const matchesExpectedError = message.includes('unknown transient reason')
 
-        if (matchesExpectedError) {
-          __callback(true)
-        } else {
-          __callback(false)
-        }
+        __callback(matchesExpectedError)
       }
     }
 
@@ -148,8 +126,8 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
             db.createObjectStore('t', { autoIncrement: true }).put(new Blob());
             finish(false)
           } catch (err) {
-            const msg = (err as Error).message || '';
-            if (msg.includes('are not yet supported')) finish(true);
+            const message = (err instanceof Error && typeof err.message === 'string') ? err.message : String(err);
+            if (message.includes('are not yet supported')) finish(true);
             else finish(false);
           } finally {
             db.close();
@@ -181,7 +159,7 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
     }
 
     async function safariPrivateTest(): Promise<void> {
-      if (navigator.storage?.getDirectory !== undefined) {
+      if (typeof navigator.storage?.getDirectory === 'function') {
         await currentSafariTest()
       } else if (navigator.maxTouchPoints !== undefined) {
         safari13to18Test()
@@ -196,14 +174,7 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
 
     function getQuotaLimit(): number {
       const w = window as any
-      if (
-        w.performance !== undefined &&
-        w.performance.memory !== undefined &&
-        w.performance.memory.jsHeapSizeLimit !== undefined
-      ) {
-        return (performance as any).memory.jsHeapSizeLimit
-      }
-      return 1073741824
+      return w?.performance?.memory?.jsHeapSizeLimit ?? 1073741824
     }
 
     // >= 76
@@ -251,18 +222,16 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
      **/
 
     async function firefoxPrivateTest(): Promise<void> {
-      if (navigator.storage && navigator.storage.getDirectory) {
+      if (typeof navigator.storage?.getDirectory === 'function') {
         try {
           await navigator.storage.getDirectory()
           __callback(false)
         } catch (e) {
           let message = (e instanceof Error && typeof e.message === 'string') ? e.message : String(e)
-          if (typeof message !== 'string') {
-            __callback(false); return
-          }
+
           const matchesExpectedError = message.includes('Security error')
-          __callback(matchesExpectedError)
-          return
+
+          __callback(matchesExpectedError); return
         }
       }
       __callback(navigator.serviceWorker === undefined)

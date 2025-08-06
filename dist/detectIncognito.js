@@ -72,14 +72,6 @@ function detectIncognito() {
                                 return 'Chromium';
                             }
                         }
-                        function assertEvalToString(value) {
-                            try {
-                                return value === eval.toString().length;
-                            }
-                            catch (e) {
-                                return false;
-                            }
-                        }
                         function feid() {
                             var toFixedEngineID = 0;
                             var neg = parseInt("-1");
@@ -92,7 +84,7 @@ function detectIncognito() {
                             return toFixedEngineID;
                         }
                         function isSafari() {
-                            return feid() === 44;
+                            return feid() === 44 || feid() === 43;
                         }
                         function isChrome() {
                             return feid() === 51;
@@ -101,41 +93,28 @@ function detectIncognito() {
                             return feid() === 25;
                         }
                         function isMSIE() {
-                            return (navigator.msSaveBlob !== undefined && assertEvalToString(39));
+                            return navigator.msSaveBlob !== undefined;
                         }
                         /**
                          * Safari (Safari for iOS & macOS)
                          **/
                         function currentSafariTest() {
-                            var _a;
                             return __awaiter(this, void 0, void 0, function () {
                                 var e_1, message, matchesExpectedError;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
+                                return __generator(this, function (_a) {
+                                    switch (_a.label) {
                                         case 0:
-                                            _b.trys.push([0, 2, , 3]);
+                                            _a.trys.push([0, 2, , 3]);
                                             return [4 /*yield*/, navigator.storage.getDirectory()];
                                         case 1:
-                                            _b.sent();
+                                            _a.sent();
                                             __callback(false);
                                             return [3 /*break*/, 3];
                                         case 2:
-                                            e_1 = _b.sent();
-                                            message = e_1;
-                                            if (e_1 instanceof Error) {
-                                                message = (_a = e_1.message) !== null && _a !== void 0 ? _a : e_1;
-                                            }
-                                            if (typeof message !== 'string') {
-                                                __callback(false);
-                                                return [2 /*return*/];
-                                            }
+                                            e_1 = _a.sent();
+                                            message = (e_1 instanceof Error && typeof e_1.message === 'string') ? e_1.message : String(e_1);
                                             matchesExpectedError = message.includes('unknown transient reason');
-                                            if (matchesExpectedError) {
-                                                __callback(true);
-                                            }
-                                            else {
-                                                __callback(false);
-                                            }
+                                            __callback(matchesExpectedError);
                                             return [3 /*break*/, 3];
                                         case 3: return [2 /*return*/];
                                     }
@@ -154,8 +133,8 @@ function detectIncognito() {
                                         finish(false);
                                     }
                                     catch (err) {
-                                        var msg = err.message || '';
-                                        if (msg.includes('are not yet supported'))
+                                        var message = (err instanceof Error && typeof err.message === 'string') ? err.message : String(err);
+                                        if (message.includes('are not yet supported'))
                                             finish(true);
                                         else
                                             finish(false);
@@ -197,7 +176,7 @@ function detectIncognito() {
                                 return __generator(this, function (_b) {
                                     switch (_b.label) {
                                         case 0:
-                                            if (!(((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.getDirectory) !== undefined)) return [3 /*break*/, 2];
+                                            if (!(typeof ((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.getDirectory) === 'function')) return [3 /*break*/, 2];
                                             return [4 /*yield*/, currentSafariTest()];
                                         case 1:
                                             _b.sent();
@@ -219,13 +198,9 @@ function detectIncognito() {
                          * Chrome
                          **/
                         function getQuotaLimit() {
+                            var _a, _b, _c;
                             var w = window;
-                            if (w.performance !== undefined &&
-                                w.performance.memory !== undefined &&
-                                w.performance.memory.jsHeapSizeLimit !== undefined) {
-                                return performance.memory.jsHeapSizeLimit;
-                            }
-                            return 1073741824;
+                            return (_c = (_b = (_a = w === null || w === void 0 ? void 0 : w.performance) === null || _a === void 0 ? void 0 : _a.memory) === null || _b === void 0 ? void 0 : _b.jsHeapSizeLimit) !== null && _c !== void 0 ? _c : 1073741824;
                         }
                         // >= 76
                         function storageQuotaChromePrivateTest() {
@@ -261,27 +236,24 @@ function detectIncognito() {
                          * Firefox
                          **/
                         function firefoxPrivateTest() {
+                            var _a;
                             return __awaiter(this, void 0, void 0, function () {
                                 var e_2, message, matchesExpectedError;
-                                return __generator(this, function (_a) {
-                                    switch (_a.label) {
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
                                         case 0:
-                                            if (!(navigator.storage && navigator.storage.getDirectory)) return [3 /*break*/, 4];
-                                            _a.label = 1;
+                                            if (!(typeof ((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.getDirectory) === 'function')) return [3 /*break*/, 4];
+                                            _b.label = 1;
                                         case 1:
-                                            _a.trys.push([1, 3, , 4]);
+                                            _b.trys.push([1, 3, , 4]);
                                             return [4 /*yield*/, navigator.storage.getDirectory()];
                                         case 2:
-                                            _a.sent();
+                                            _b.sent();
                                             __callback(false);
                                             return [3 /*break*/, 4];
                                         case 3:
-                                            e_2 = _a.sent();
+                                            e_2 = _b.sent();
                                             message = (e_2 instanceof Error && typeof e_2.message === 'string') ? e_2.message : String(e_2);
-                                            if (typeof message !== 'string') {
-                                                __callback(false);
-                                                return [2 /*return*/];
-                                            }
                                             matchesExpectedError = message.includes('Security error');
                                             __callback(matchesExpectedError);
                                             return [2 /*return*/];
