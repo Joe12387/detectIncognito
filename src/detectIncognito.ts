@@ -234,7 +234,21 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
           __callback(matchesExpectedError); return
         }
       }
-      __callback(navigator.serviceWorker === undefined)
+      else {
+        const request = indexedDB.open('inPrivate');
+
+        request.onerror = (event) => {
+          if (request.error && request.error.name === 'InvalidStateError') {
+            event.preventDefault();
+          }
+          __callback(true);
+        };
+
+        request.onsuccess = () => {
+          indexedDB.deleteDatabase('inPrivate');
+          __callback(false);
+        };
+      }
     }
 
     /**
