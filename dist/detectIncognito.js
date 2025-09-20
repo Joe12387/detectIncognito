@@ -238,11 +238,11 @@ function detectIncognito() {
                         function firefoxPrivateTest() {
                             var _a;
                             return __awaiter(this, void 0, void 0, function () {
-                                var e_2, message, matchesExpectedError;
+                                var e_2, message, matchesExpectedError, request_1;
                                 return __generator(this, function (_b) {
                                     switch (_b.label) {
                                         case 0:
-                                            if (!(typeof ((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.getDirectory) === 'function')) return [3 /*break*/, 4];
+                                            if (!(typeof ((_a = navigator.storage) === null || _a === void 0 ? void 0 : _a.getDirectory) === 'function')) return [3 /*break*/, 5];
                                             _b.label = 1;
                                         case 1:
                                             _b.trys.push([1, 3, , 4]);
@@ -257,9 +257,21 @@ function detectIncognito() {
                                             matchesExpectedError = message.includes('Security error');
                                             __callback(matchesExpectedError);
                                             return [2 /*return*/];
-                                        case 4:
-                                            __callback(navigator.serviceWorker === undefined);
-                                            return [2 /*return*/];
+                                        case 4: return [3 /*break*/, 6];
+                                        case 5:
+                                            request_1 = indexedDB.open('inPrivate');
+                                            request_1.onerror = function (event) {
+                                                if (request_1.error && request_1.error.name === 'InvalidStateError') {
+                                                    event.preventDefault();
+                                                }
+                                                __callback(true);
+                                            };
+                                            request_1.onsuccess = function () {
+                                                indexedDB.deleteDatabase('inPrivate');
+                                                __callback(false);
+                                            };
+                                            _b.label = 6;
+                                        case 6: return [2 /*return*/];
                                     }
                                 });
                             });
