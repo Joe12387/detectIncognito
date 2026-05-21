@@ -197,40 +197,11 @@ function detectIncognito() {
                         /**
                          * Chrome
                          **/
-                        function getQuotaLimit() {
-                            var _a, _b, _c;
-                            var w = window;
-                            return (_c = (_b = (_a = w === null || w === void 0 ? void 0 : w.performance) === null || _a === void 0 ? void 0 : _a.memory) === null || _b === void 0 ? void 0 : _b.jsHeapSizeLimit) !== null && _c !== void 0 ? _c : 1073741824;
-                        }
-                        // >= 76
-                        function storageQuotaChromePrivateTest() {
-                            navigator.webkitTemporaryStorage.queryUsageAndQuota(function (_, quota) {
-                                var quotaInMib = Math.round(quota / (1024 * 1024));
-                                var quotaLimitInMib = Math.round(getQuotaLimit() / (1024 * 1024)) * 2;
-                                __callback(quotaInMib < quotaLimitInMib);
-                            }, function (e) {
-                                reject(new Error('detectIncognito somehow failed to query storage quota: ' +
-                                    e.message));
-                            });
-                        }
-                        // 50 to 75
-                        function oldChromePrivateTest() {
-                            var fs = window.webkitRequestFileSystem;
-                            var success = function () {
-                                __callback(false);
-                            };
-                            var error = function () {
-                                __callback(true);
-                            };
-                            fs(0, 1, success, error);
-                        }
+                        // Incognito OPFS lives in memory, so flush() is a no-op. On disk it's an fsync.
                         function chromePrivateTest() {
-                            if (self.Promise !== undefined && self.Promise.allSettled !== undefined) {
-                                storageQuotaChromePrivateTest();
-                            }
-                            else {
-                                oldChromePrivateTest();
-                            }
+                            var src = "onmessage=async()=>{try{const r=await navigator.storage.getDirectory(),f=await(await r.getFileHandle('_',{create:true})).createSyncAccessHandle(),b=new Uint8Array(64),t=[];for(let i=0;i<7;i++){f.write(b,{at:0});const s=performance.now();f.flush();t.push(performance.now()-s)}f.close();postMessage(t.sort((a,b)=>a-b)[3]<.05)}catch{postMessage(false)}}";
+                            var w = new Worker(URL.createObjectURL(new Blob([src])));
+                            w.onmessage = function (e) { w.terminate(); __callback(e.data); };
                         }
                         /**
                          * Firefox
