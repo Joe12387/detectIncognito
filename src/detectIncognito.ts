@@ -172,49 +172,11 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
      * Chrome
      **/
 
-    function getQuotaLimit(): number {
-      const w = window as any
-      return w?.performance?.memory?.jsHeapSizeLimit ?? 1073741824
-    }
-
-    // >= 76
-    function storageQuotaChromePrivateTest(): void {
-      (navigator as any).webkitTemporaryStorage.queryUsageAndQuota(
-        function (_: number, quota: number) {
-          const quotaInMib = Math.round(quota / (1024 * 1024))
-          const quotaLimitInMib = Math.round(getQuotaLimit() / (1024 * 1024)) * 2
-
-          __callback(quotaInMib < quotaLimitInMib)
-        },
-        function (e: any) {
-          reject(
-            new Error(
-              'detectIncognito somehow failed to query storage quota: ' +
-              e.message
-            )
-          )
-        }
-      )
-    }
-
-    // 50 to 75
-    function oldChromePrivateTest(): void {
-      const fs = (window as any).webkitRequestFileSystem
-      const success = function () {
-        __callback(false)
-      }
-      const error = function () {
-        __callback(true)
-      }
-      fs(0, 1, success, error)
-    }
-
+    // Incognito OPFS lives in memory, so flush() is a no-op. On disk it's an fsync.
     function chromePrivateTest(): void {
-      if (self.Promise !== undefined && (self.Promise as any).allSettled !== undefined) {
-        storageQuotaChromePrivateTest()
-      } else {
-        oldChromePrivateTest()
-      }
+      const src = `(async()=>{try{const r=await navigator.storage.getDirectory(),f=await(await r.getFileHandle('_',{create:true})).createSyncAccessHandle(),b=new Uint8Array(1);let m=1/0;for(let i=0;i<3;i++){f.write(b,{at:0});const s=performance.now();f.flush();const dt=performance.now()-s;if(dt<m)m=dt}f.close();postMessage(m<.1)}catch{postMessage(false)}})()`
+      const w = new Worker(URL.createObjectURL(new Blob([src])))
+      w.onmessage = e => { w.terminate(); __callback(e.data) }
     }
 
     /**
