@@ -2,6 +2,10 @@
 
 [I'd](https://github.com/Joe12387) like to thank the following contributors for their work on `detectIncognito`:
 
+- [ilkkapeltola](https://github.com/ilkkapeltola) - [PR #62](https://github.com/Joe12387/detectIncognito/pull/62): Replace removed Chrome quota test with OPFS flush timing (May 21, 2026)
+- [hawkeye116477](https://github.com/hawkeye116477) - [PR #57](https://github.com/Joe12387/detectIncognito/pull/57): Make it working for UXP browsers (Sep 18, 2025)
+- [darshanbhatta](https://github.com/darshanbhatta) - [PR #48](https://github.com/Joe12387/detectIncognito/pull/48): fix: ios/Safari 18.x fallback detection logic (Apr 3, 2025)
+- [MarianoFacundoArch](https://github.com/MarianoFacundoArch) - [PR #45](https://github.com/Joe12387/detectIncognito/pull/45): fix Issue #44 (Nov 22, 2024)
 - [panmenghan](https://github.com/panmenghan) - [PR #39](https://github.com/Joe12387/detectIncognito/pull/39): fix detectIncognito.esm.js has no exports (Mar 13, 2024)
 - [p810](https://github.com/p810) - [PR #38](https://github.com/Joe12387/detectIncognito/pull/38): Attempts to fix undefined export issue with 1.3.1 (Mar 12, 2024)
 - [p810](https://github.com/p810) - [PR #32](https://github.com/Joe12387/detectIncognito/pull/32): Reintroduces module option for npm consumers, and adds a new build step for the ES5 compliant/CDN version of the script (Feb 18, 2023)

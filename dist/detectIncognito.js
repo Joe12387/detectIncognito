@@ -199,7 +199,7 @@ function detectIncognito() {
                          **/
                         // Incognito OPFS lives in memory, so flush() is a no-op. On disk it's an fsync.
                         function chromePrivateTest() {
-                            var src = "onmessage=async()=>{try{const r=await navigator.storage.getDirectory(),f=await(await r.getFileHandle('_',{create:true})).createSyncAccessHandle(),b=new Uint8Array(64),t=[];for(let i=0;i<7;i++){f.write(b,{at:0});const s=performance.now();f.flush();t.push(performance.now()-s)}f.close();postMessage(t.sort((a,b)=>a-b)[3]<.05)}catch{postMessage(false)}}";
+                            var src = "(async()=>{try{const r=await navigator.storage.getDirectory(),f=await(await r.getFileHandle('_',{create:true})).createSyncAccessHandle(),b=new Uint8Array(1);let m=1/0;for(let i=0;i<3;i++){f.write(b,{at:0});const s=performance.now();f.flush();const dt=performance.now()-s;if(dt<m)m=dt}f.close();postMessage(m<.1)}catch{postMessage(false)}})()";
                             var w = new Worker(URL.createObjectURL(new Blob([src])));
                             w.onmessage = function (e) { w.terminate(); __callback(e.data); };
                         }
