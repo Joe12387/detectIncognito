@@ -1,7 +1,5 @@
 # detectIncognito.js
 
-**Note: Detection is broken for Chromium 147+ due to predictable-reported-quota being enabled by default (see Issue #49)**
-
 [![npm version](https://img.shields.io/npm/v/detectincognitojs)](https://www.npmjs.com/package/detectincognitojs)
 [![Downloads](https://img.shields.io/npm/dm/detectincognitojs)](https://npmcharts.com/compare/detectincognitojs)
 [![License](https://img.shields.io/npm/l/detectincognitojs)](https://opensource.org/licenses/MIT)
@@ -14,7 +12,7 @@
 
 ## Features
 
-- ✅ Incognito detection on Google Chrome (see notes)
+- ✅ Incognito detection on Google Chrome
 - ✅ Private Window detection on Safari (macOS)
 - ✅ Private Tab detection on Safari (iOS)
 - ✅ Private Window detection in Firefox
@@ -54,7 +52,7 @@ detectIncognito().then((result) => {
 | Browser         | Platform(s) | Versions            | Notes                                                                                         |
 |-----------------|-------------|---------------------|-----------------------------------------------------------------------------------------------|
 | Safari          | All         | ≤ 26.4              |                                                                                               |
-| Chromium | All         | 50 to 146                  | Detection broken by `predictable-reported-quota` flag ([Issue #49](https://github.com/Joe12387/detectIncognito/issues/49)) |
+| Chromium        | All         | 109 to 149          |                                                                                               |
 | Firefox         | All         | 44 to 151           |                                                                                               |
 | MSIE            | Windows     | 11                  | Requires Promise polyfill                                                                     |
 
@@ -68,8 +66,8 @@ detectIncognito().then((result) => {
 
 ## Similar Projects
 
-- [Established Emails](https://establishedemails.com/) - Positive email reputation API for fraud teams, able to determine the minimum age of billions of emails.
 - [OverpoweredJS](https://overpoweredjs.com/) – An advanced browser fingerprinting & bot detection solution.
+- [Established Emails](https://establishedemails.com/) - Positive email reputation API for fraud teams, able to determine the minimum age of billions of emails.
 
 ## License
 
