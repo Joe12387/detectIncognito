@@ -172,11 +172,69 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
      * Chrome
      **/
 
-    // Incognito OPFS lives in memory, so flush() is a no-op. On disk it's an fsync.
+    // Incognito IndexedDB is in-memory (leveldb memenv): a durability:"strict" commit's
+    // fsync is a no-op, same cost as "relaxed" => ratio ~1. On disk, strict fsyncs =>
+    // ratio > 1. The ratio is self-normalizing, so it holds across hardware where the old
+    // absolute OPFS-flush threshold false-positived on Android (issue #65). Runs on the
+    // main thread — no Worker/CSP dependency. Calibrated on 18 real Android devices + real
+    // desktop incognito: 16 KB payload, threshold 1.30, median of ROUNDS readings. Premise
+    // is the LevelDB memenv backend; re-validate if the IndexedDB SQLite backend
+    // (IdbSqliteBackingStore) ever Finch-rolls to default.
     function chromePrivateTest(): void {
-      const src = `(async()=>{try{const r=await navigator.storage.getDirectory(),f=await(await r.getFileHandle('_',{create:true})).createSyncAccessHandle(),b=new Uint8Array(1);let m=1/0;for(let i=0;i<3;i++){f.write(b,{at:0});const s=performance.now();f.flush();const dt=performance.now()-s;if(dt<m)m=dt}f.close();postMessage(m<.1)}catch{postMessage(false)}})()`
-      const w = new Worker(URL.createObjectURL(new Blob([src])))
-      w.onmessage = e => { w.terminate(); __callback(e.data) }
+      const PAYLOAD = 16384
+      const WRITES = 15
+      const ROUNDS = 21
+      const THRESHOLD = 1.30
+
+      const dbName = '__di_' + Math.random().toString(36).slice(2)
+      const payload = new Uint8Array(PAYLOAD)
+      const req = indexedDB.open(dbName, 1)
+      req.onupgradeneeded = () => { req.result.createObjectStore('s') }
+      req.onerror = () => __callback(false)
+      req.onsuccess = () => {
+        const db = req.result
+
+        // Bail out if the durability hint is not honored (older engines) — the strict vs
+        // relaxed split would be a no-op and the test meaningless. Abstain => not private.
+        let honored = false
+        try {
+          const t = db.transaction('s', 'readwrite', { durability: 'strict' })
+          honored = t.durability === 'strict'
+          t.abort()
+        } catch { /* durability option unsupported */ }
+        if (!honored) { db.close(); indexedDB.deleteDatabase(dbName); __callback(false); return }
+
+        // Time WRITES sequential single-put commits at a given durability. Sequential
+        // (await each commit) so leveldb group-commit can't amortize the strict fsync
+        // across the batch.
+        const block = (durability: 'strict' | 'relaxed'): Promise<number> =>
+          new Promise((resolve, reject) => {
+            const t0 = performance.now()
+            let i = 0
+            const step = (): void => {
+              if (i === WRITES) { resolve(performance.now() - t0); return }
+              const tx = db.transaction('s', 'readwrite', { durability })
+              tx.objectStore('s').put(payload, i)
+              i++
+              tx.oncomplete = step
+              tx.onerror = tx.onabort = () => reject(tx.error)
+            }
+            step()
+          })
+
+        void (async () => {
+          await block('relaxed'); await block('strict') // warm-up, discarded
+          const ratios: number[] = []
+          for (let r = 0; r < ROUNDS; r++) {
+            const rel = await block('relaxed')
+            const str = await block('strict')
+            ratios.push(rel > 0 ? str / rel : Infinity) // median-of-rounds tames the tail
+          }
+          ratios.sort((a, b) => a - b)
+          db.close(); indexedDB.deleteDatabase(dbName)
+          __callback(ratios[ratios.length >> 1] < THRESHOLD) // ~1.0 = incognito; disk >> 1.30
+        })().catch(() => { db.close(); indexedDB.deleteDatabase(dbName); __callback(false) })
+      }
     }
 
     /**

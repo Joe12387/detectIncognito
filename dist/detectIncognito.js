@@ -197,11 +197,99 @@ function detectIncognito() {
                         /**
                          * Chrome
                          **/
-                        // Incognito OPFS lives in memory, so flush() is a no-op. On disk it's an fsync.
+                        // Incognito IndexedDB is in-memory (leveldb memenv): a durability:"strict" commit's
+                        // fsync is a no-op, same cost as "relaxed" => ratio ~1. On disk, strict fsyncs =>
+                        // ratio > 1. The ratio is self-normalizing, so it holds across hardware where the old
+                        // absolute OPFS-flush threshold false-positived on Android (issue #65). Runs on the
+                        // main thread — no Worker/CSP dependency. Calibrated on 18 real Android devices + real
+                        // desktop incognito: 16 KB payload, threshold 1.30, median of ROUNDS readings. Premise
+                        // is the LevelDB memenv backend; re-validate if the IndexedDB SQLite backend
+                        // (IdbSqliteBackingStore) ever Finch-rolls to default.
                         function chromePrivateTest() {
-                            var src = "(async()=>{try{const r=await navigator.storage.getDirectory(),f=await(await r.getFileHandle('_',{create:true})).createSyncAccessHandle(),b=new Uint8Array(1);let m=1/0;for(let i=0;i<3;i++){f.write(b,{at:0});const s=performance.now();f.flush();const dt=performance.now()-s;if(dt<m)m=dt}f.close();postMessage(m<.1)}catch{postMessage(false)}})()";
-                            var w = new Worker(URL.createObjectURL(new Blob([src])));
-                            w.onmessage = function (e) { w.terminate(); __callback(e.data); };
+                            var _this = this;
+                            var PAYLOAD = 16384;
+                            var WRITES = 15;
+                            var ROUNDS = 21;
+                            var THRESHOLD = 1.30;
+                            var dbName = '__di_' + Math.random().toString(36).slice(2);
+                            var payload = new Uint8Array(PAYLOAD);
+                            var req = indexedDB.open(dbName, 1);
+                            req.onupgradeneeded = function () { req.result.createObjectStore('s'); };
+                            req.onerror = function () { return __callback(false); };
+                            req.onsuccess = function () {
+                                var db = req.result;
+                                // Bail out if the durability hint is not honored (older engines) — the strict vs
+                                // relaxed split would be a no-op and the test meaningless. Abstain => not private.
+                                var honored = false;
+                                try {
+                                    var t = db.transaction('s', 'readwrite', { durability: 'strict' });
+                                    honored = t.durability === 'strict';
+                                    t.abort();
+                                }
+                                catch ( /* durability option unsupported */_a) { /* durability option unsupported */ }
+                                if (!honored) {
+                                    db.close();
+                                    indexedDB.deleteDatabase(dbName);
+                                    __callback(false);
+                                    return;
+                                }
+                                // Time WRITES sequential single-put commits at a given durability. Sequential
+                                // (await each commit) so leveldb group-commit can't amortize the strict fsync
+                                // across the batch.
+                                var block = function (durability) {
+                                    return new Promise(function (resolve, reject) {
+                                        var t0 = performance.now();
+                                        var i = 0;
+                                        var step = function () {
+                                            if (i === WRITES) {
+                                                resolve(performance.now() - t0);
+                                                return;
+                                            }
+                                            var tx = db.transaction('s', 'readwrite', { durability: durability });
+                                            tx.objectStore('s').put(payload, i);
+                                            i++;
+                                            tx.oncomplete = step;
+                                            tx.onerror = tx.onabort = function () { return reject(tx.error); };
+                                        };
+                                        step();
+                                    });
+                                };
+                                void (function () { return __awaiter(_this, void 0, void 0, function () {
+                                    var ratios, r, rel, str;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4 /*yield*/, block('relaxed')];
+                                            case 1:
+                                                _a.sent();
+                                                return [4 /*yield*/, block('strict')]; // warm-up, discarded
+                                            case 2:
+                                                _a.sent(); // warm-up, discarded
+                                                ratios = [];
+                                                r = 0;
+                                                _a.label = 3;
+                                            case 3:
+                                                if (!(r < ROUNDS)) return [3 /*break*/, 7];
+                                                return [4 /*yield*/, block('relaxed')];
+                                            case 4:
+                                                rel = _a.sent();
+                                                return [4 /*yield*/, block('strict')];
+                                            case 5:
+                                                str = _a.sent();
+                                                ratios.push(rel > 0 ? str / rel : Infinity); // median-of-rounds tames the tail
+                                                _a.label = 6;
+                                            case 6:
+                                                r++;
+                                                return [3 /*break*/, 3];
+                                            case 7:
+                                                ratios.sort(function (a, b) { return a - b; });
+                                                db.close();
+                                                indexedDB.deleteDatabase(dbName);
+                                                __callback(ratios[ratios.length >> 1] < THRESHOLD); // ~1.0 = incognito; disk >> 1.30
+                                                return [2 /*return*/];
+                                        }
+                                    });
+                                }); })()["catch"](function () { db.close(); indexedDB.deleteDatabase(dbName); __callback(false); });
+                            };
                         }
                         /**
                          * Firefox
