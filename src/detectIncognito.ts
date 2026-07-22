@@ -177,13 +177,16 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
     // ratio > 1. The ratio is self-normalizing, so it holds across hardware where the old
     // absolute OPFS-flush threshold false-positived on Android (issue #65). Runs on the
     // main thread — no Worker/CSP dependency. Calibrated on 18 real Android devices + real
-    // desktop incognito: 16 KB payload, threshold 1.30, median of ROUNDS readings. Premise
-    // is the LevelDB memenv backend; re-validate if the IndexedDB SQLite backend
+    // desktop incognito: 16 KB payload, threshold 1.30, median of up to ROUNDS readings
+    // (at least MIN_ROUNDS), bounded by a ~1s wall-clock cap so slow phones don't hang.
+    // Premise is the LevelDB memenv backend; re-validate if the IndexedDB SQLite backend
     // (IdbSqliteBackingStore) ever Finch-rolls to default.
     function chromePrivateTest(): void {
       const PAYLOAD = 16384
       const WRITES = 15
-      const ROUNDS = 21
+      const ROUNDS = 15      // max rounds
+      const MIN_ROUNDS = 7   // always run at least this many before the cap can stop us
+      const CAP_MS = 1000    // soft wall-clock budget; slow devices stop early (but >= MIN_ROUNDS)
       const THRESHOLD = 1.30
 
       const dbName = '__di_' + Math.random().toString(36).slice(2)
@@ -223,12 +226,16 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
           })
 
         void (async () => {
+          const start = performance.now()
           await block('relaxed'); await block('strict') // warm-up, discarded
           const ratios: number[] = []
           for (let r = 0; r < ROUNDS; r++) {
             const rel = await block('relaxed')
             const str = await block('strict')
             ratios.push(rel > 0 ? str / rel : Infinity) // median-of-rounds tames the tail
+            // Bound wall-clock: once past MIN_ROUNDS, stop when the budget is spent. The
+            // devices that hit this are the high-margin slow ones, so accuracy is preserved.
+            if (ratios.length >= MIN_ROUNDS && performance.now() - start >= CAP_MS) break
           }
           ratios.sort((a, b) => a - b)
           db.close(); indexedDB.deleteDatabase(dbName)

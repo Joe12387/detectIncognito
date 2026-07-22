@@ -202,14 +202,17 @@ function detectIncognito() {
                         // ratio > 1. The ratio is self-normalizing, so it holds across hardware where the old
                         // absolute OPFS-flush threshold false-positived on Android (issue #65). Runs on the
                         // main thread — no Worker/CSP dependency. Calibrated on 18 real Android devices + real
-                        // desktop incognito: 16 KB payload, threshold 1.30, median of ROUNDS readings. Premise
-                        // is the LevelDB memenv backend; re-validate if the IndexedDB SQLite backend
+                        // desktop incognito: 16 KB payload, threshold 1.30, median of up to ROUNDS readings
+                        // (at least MIN_ROUNDS), bounded by a ~1s wall-clock cap so slow phones don't hang.
+                        // Premise is the LevelDB memenv backend; re-validate if the IndexedDB SQLite backend
                         // (IdbSqliteBackingStore) ever Finch-rolls to default.
                         function chromePrivateTest() {
                             var _this = this;
                             var PAYLOAD = 16384;
                             var WRITES = 15;
-                            var ROUNDS = 21;
+                            var ROUNDS = 15; // max rounds
+                            var MIN_ROUNDS = 7; // always run at least this many before the cap can stop us
+                            var CAP_MS = 1000; // soft wall-clock budget; slow devices stop early (but >= MIN_ROUNDS)
                             var THRESHOLD = 1.30;
                             var dbName = '__di_' + Math.random().toString(36).slice(2);
                             var payload = new Uint8Array(PAYLOAD);
@@ -255,10 +258,12 @@ function detectIncognito() {
                                     });
                                 };
                                 void (function () { return __awaiter(_this, void 0, void 0, function () {
-                                    var ratios, r, rel, str;
+                                    var start, ratios, r, rel, str;
                                     return __generator(this, function (_a) {
                                         switch (_a.label) {
-                                            case 0: return [4 /*yield*/, block('relaxed')];
+                                            case 0:
+                                                start = performance.now();
+                                                return [4 /*yield*/, block('relaxed')];
                                             case 1:
                                                 _a.sent();
                                                 return [4 /*yield*/, block('strict')]; // warm-up, discarded
@@ -276,6 +281,10 @@ function detectIncognito() {
                                             case 5:
                                                 str = _a.sent();
                                                 ratios.push(rel > 0 ? str / rel : Infinity); // median-of-rounds tames the tail
+                                                // Bound wall-clock: once past MIN_ROUNDS, stop when the budget is spent. The
+                                                // devices that hit this are the high-margin slow ones, so accuracy is preserved.
+                                                if (ratios.length >= MIN_ROUNDS && performance.now() - start >= CAP_MS)
+                                                    return [3 /*break*/, 7];
                                                 _a.label = 6;
                                             case 6:
                                                 r++;
