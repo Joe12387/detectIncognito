@@ -215,7 +215,7 @@ function detectIncognito() {
                             var payload = new Uint8Array(PAYLOAD);
                             var req = indexedDB.open(dbName, 1);
                             req.onupgradeneeded = function () { req.result.createObjectStore('s'); };
-                            req.onerror = function () { return __callback(false); };
+                            req.onerror = function () { indexedDB.deleteDatabase(dbName); __callback(false); };
                             req.onsuccess = function () {
                                 var db = req.result;
                                 // Bail out if the durability hint is not honored (older engines) — the strict vs

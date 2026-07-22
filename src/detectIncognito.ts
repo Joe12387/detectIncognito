@@ -190,7 +190,7 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
       const payload = new Uint8Array(PAYLOAD)
       const req = indexedDB.open(dbName, 1)
       req.onupgradeneeded = () => { req.result.createObjectStore('s') }
-      req.onerror = () => __callback(false)
+      req.onerror = () => { indexedDB.deleteDatabase(dbName); __callback(false) }
       req.onsuccess = () => {
         const db = req.result
 
