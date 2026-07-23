@@ -51,9 +51,9 @@ detectIncognito().then((result) => {
 
 | Browser         | Platform(s) | Versions            | Notes                                                                                         |
 |-----------------|-------------|---------------------|-----------------------------------------------------------------------------------------------|
-| Safari          | All         | ≤ 26.4              |                                                                                               |
-| Chromium        | All         | 109 to 149          |                                                                                               |
-| Firefox         | All         | 44 to 151           |                                                                                               |
+| Safari          | All         | ≤ 26.5              |                                                                                               |
+| Chromium        | All         | 109 to 150          |                                                                                               |
+| Firefox         | All         | 44 to 153           |                                                                                               |
 | MSIE            | Windows     | 11                  | Requires Promise polyfill                                                                     |
 
 ## Notes
