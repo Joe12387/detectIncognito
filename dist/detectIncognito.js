@@ -328,11 +328,16 @@ function detectIncognito() {
                                         case 4: return [3 /*break*/, 6];
                                         case 5:
                                             request_1 = indexedDB.open('inPrivate');
+                                            // Only a genuine private window fails with InvalidStateError. Any other open
+                                            // failure (quota, corrupt profile, dom.indexedDB.enabled=false, enterprise
+                                            // policy) is not evidence of private browsing => not private.
                                             request_1.onerror = function (event) {
                                                 if (request_1.error && request_1.error.name === 'InvalidStateError') {
-                                                    event.preventDefault();
+                                                    event.preventDefault(); // suppress the unhandled-error console noise
+                                                    __callback(true);
+                                                    return;
                                                 }
-                                                __callback(true);
+                                                __callback(false);
                                             };
                                             request_1.onsuccess = function () {
                                                 indexedDB.deleteDatabase('inPrivate');
