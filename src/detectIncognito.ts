@@ -1,6 +1,6 @@
 /*!
  *
- * detectIncognito v1.8.0
+ * detectIncognito v1.8.1
  *
  * https://github.com/Joe12387/detectIncognito
  *
@@ -264,11 +264,16 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
       else {
         const request = indexedDB.open('inPrivate');
 
+        // Only a genuine private window fails with InvalidStateError. Any other open
+        // failure (quota, corrupt profile, dom.indexedDB.enabled=false, enterprise
+        // policy) is not evidence of private browsing => not private.
         request.onerror = (event) => {
           if (request.error && request.error.name === 'InvalidStateError') {
-            event.preventDefault();
+            event.preventDefault(); // suppress the unhandled-error console noise
+            __callback(true);
+            return;
           }
-          __callback(true);
+          __callback(false);
         };
 
         request.onsuccess = () => {
