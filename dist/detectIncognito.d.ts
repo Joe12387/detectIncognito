@@ -29,11 +29,6 @@
  * Please keep this comment intact in order to properly abide by the MIT License.
  *
  **/
-declare global {
-    interface Window {
-        detectIncognito: typeof detectIncognito;
-    }
-}
 export declare function detectIncognito(): Promise<{
     isPrivate: boolean;
     browserName: string;
