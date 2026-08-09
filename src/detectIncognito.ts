@@ -29,12 +29,6 @@
  * Please keep this comment intact in order to properly abide by the MIT License.
  *
  **/
-declare global {
-  interface Window {
-    detectIncognito: typeof detectIncognito;
-  }
-}
-
 export async function detectIncognito(): Promise<{ isPrivate: boolean; browserName: string }> {
   return await new Promise(function (resolve, reject) {
     let browserName = 'Unknown'
@@ -311,10 +305,6 @@ export async function detectIncognito(): Promise<{ isPrivate: boolean; browserNa
 
     main().catch(reject)
   })
-}
-
-if (typeof window !== 'undefined') {
-  window.detectIncognito = detectIncognito;
 }
 
 export default detectIncognito;
